@@ -32,7 +32,5 @@ public class Club {
     @OneToMany(mappedBy = "club")
     private Set<Team> teams;
 
-    @OneToMany(mappedBy = "club")
-    private Set<PlayerClub> playerClubs;
 
 }
