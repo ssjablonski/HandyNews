@@ -1,5 +1,6 @@
-package com.seba.handy_news.domain;
+package com.seba.handy_news.player;
 
+import com.seba.handy_news.club.Club;
 import com.seba.handy_news.enums.Hand;
 import com.seba.handy_news.enums.Position;
 import jakarta.persistence.*;

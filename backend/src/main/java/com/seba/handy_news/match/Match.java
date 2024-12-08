@@ -1,5 +1,8 @@
-package com.seba.handy_news.domain;
+package com.seba.handy_news.match;
 
+import com.seba.handy_news.season.Season;
+import com.seba.handy_news.team.Team;
+import com.seba.handy_news.player.PlayerMatch;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

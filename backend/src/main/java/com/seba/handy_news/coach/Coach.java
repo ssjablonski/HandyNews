@@ -1,5 +1,6 @@
-package com.seba.handy_news.domain;
+package com.seba.handy_news.coach;
 
+import com.seba.handy_news.team.Team;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,23 +15,17 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "club")
-public class Club {
-
+@Table
+public class Coach {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String firstName;
+    private String lastName;
+    private String nationality;
+    private Date dateOfBirth;
 
-    private String city;
-
-    private Date founded;
-
-    @OneToMany(mappedBy = "club")
+    @OneToMany(mappedBy = "coach")
     private Set<Team> teams;
-
-    @OneToMany(mappedBy = "club")
-    private Set<PlayerClub> playerClubs;
-
 }

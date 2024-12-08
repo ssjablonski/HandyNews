@@ -1,5 +1,9 @@
-package com.seba.handy_news.domain;
+package com.seba.handy_news.team;
 
+import com.seba.handy_news.club.Club;
+import com.seba.handy_news.coach.Coach;
+import com.seba.handy_news.league.League;
+import com.seba.handy_news.match.Match;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,8 +26,7 @@ public class Team {
 
     private String name;
 
-//    string czy int?
-    private String level;
+    private int level;
 
     @ManyToOne
     @JoinColumn(name = "club_id", nullable = false)

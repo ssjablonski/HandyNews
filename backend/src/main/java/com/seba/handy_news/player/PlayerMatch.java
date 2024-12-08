@@ -1,20 +1,20 @@
-package com.seba.handy_news.domain;
+package com.seba.handy_news.player;
 
+import com.seba.handy_news.match.Match;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "player_club")
-public class PlayerClub {
+@Table(name = "player_match")
+public class PlayerMatch {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,9 +24,12 @@ public class PlayerClub {
     private Player player;
 
     @ManyToOne
-    @JoinColumn(name = "club_id", nullable = false)
-    private Club club;
+    @JoinColumn(name = "match_id", nullable = false)
+    private Match match;
 
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private int goals=0;
+    private int assists=0;
+    private int yellowCards=0;
+    private int redCards=0;
+    private int suspensions=0;
 }

@@ -1,5 +1,7 @@
-package com.seba.handy_news.domain;
+package com.seba.handy_news.club;
 
+import com.seba.handy_news.player.PlayerClub;
+import com.seba.handy_news.team.Team;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,8 +16,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "season")
-public class Season {
+@Table(name = "club")
+public class Club {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,13 +25,14 @@ public class Season {
 
     private String name;
 
-    private Date startDate;
-    private Date endDate;
+    private String city;
 
-    @ManyToOne
-    @JoinColumn(name = "league_id", nullable = false)
-    private League league;
+    private Date founded;
 
-    @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
-    private Set<Match> matches;
+    @OneToMany(mappedBy = "club")
+    private Set<Team> teams;
+
+    @OneToMany(mappedBy = "club")
+    private Set<PlayerClub> playerClubs;
+
 }
