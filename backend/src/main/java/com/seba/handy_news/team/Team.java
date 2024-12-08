@@ -26,8 +26,6 @@ public class Team {
 
     private String name;
 
-    private int level;
-
     @ManyToOne
     @JoinColumn(name = "club_id", nullable = false)
     private Club club;
