@@ -1,8 +1,8 @@
 package com.seba.handy_news.match;
 
-import com.seba.handy_news.season.Season;
-import com.seba.handy_news.team.Team;
+import com.seba.handy_news.club.Club;
 import com.seba.handy_news.player.PlayerMatch;
+import com.seba.handy_news.season.Season;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,11 +32,11 @@ public class Match {
 
     @ManyToOne
     @JoinColumn(name = "home_team_id", nullable = false)
-    private Team homeTeam;
+    private Club homeTeam;
 
     @ManyToOne
     @JoinColumn(name = "away_team_id", nullable = false)
-    private Team awayTeam;
+    private Club awayTeam;
 
     @ManyToOne
     @JoinColumn(name = "season_id", nullable = false)

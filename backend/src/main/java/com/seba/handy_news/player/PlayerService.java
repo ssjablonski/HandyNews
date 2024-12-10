@@ -1,5 +1,7 @@
 package com.seba.handy_news.player;
 
+import com.seba.handy_news.club.Club;
+import com.seba.handy_news.club.ClubRepository;
 import com.seba.handy_news.enums.Hand;
 import com.seba.handy_news.enums.Position;
 import jakarta.persistence.EntityManager;
@@ -9,7 +11,6 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,11 +24,14 @@ public class PlayerService {
     private EntityManager entityManager;
 
     private final PlayerRepository playerRepository;
+    private final ClubRepository clubRepository;
 
     public PlayerService(
-            PlayerRepository playerRepository
+            PlayerRepository playerRepository,
+            ClubRepository clubRepository
     ) {
         this.playerRepository = playerRepository;
+        this.clubRepository = clubRepository;
     }
 
     public List<Player> getAllPlayers() {
@@ -117,7 +121,9 @@ public class PlayerService {
     }
 
 
-    public Player createPlayer(Player player) {
+    public Player createPlayer(Player player, Long clubId) {
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new IllegalArgumentException("Club not found."));
+        player.setClub(club);
         return playerRepository.save(player);
     }
 

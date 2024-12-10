@@ -1,5 +1,6 @@
 package com.seba.handy_news.league;
 
+import com.seba.handy_news.club.Club;
 import com.seba.handy_news.season.Season;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -27,5 +29,8 @@ public class League {
 
     @OneToMany(mappedBy = "league", cascade = CascadeType.ALL)
     private Set<Season> seasons;
+
+    @OneToMany
+    private List<Club> clubs;
 
 }

@@ -1,7 +1,7 @@
 package com.seba.handy_news.club;
 
-import com.seba.handy_news.player.PlayerClub;
-import com.seba.handy_news.team.Team;
+import com.seba.handy_news.coach.Coach;
+import com.seba.handy_news.league.League;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -29,8 +28,11 @@ public class Club {
 
     private Date founded;
 
-    @OneToMany(mappedBy = "club")
-    private Set<Team> teams;
+    @ManyToOne
+    private Coach coach;
+
+    @ManyToOne
+    private League league;
 
 
 }

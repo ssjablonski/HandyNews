@@ -10,11 +10,9 @@ import java.util.List;
 @RequestMapping("api/club")
 public class ClubController {
     private final ClubService clubService;
-    private final PlayerService playerService;
 
     public ClubController(ClubService clubService, PlayerService playerService) {
         this.clubService = clubService;
-        this.playerService = playerService;
     }
 
     @GetMapping

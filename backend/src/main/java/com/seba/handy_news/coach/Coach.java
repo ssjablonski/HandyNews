@@ -1,6 +1,6 @@
 package com.seba.handy_news.coach;
 
-import com.seba.handy_news.team.Team;
+import com.seba.handy_news.club.Club;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,5 +27,5 @@ public class Coach {
     private Date dateOfBirth;
 
     @OneToMany(mappedBy = "coach")
-    private Set<Team> teams;
+    private Set<Club> clubs;
 }

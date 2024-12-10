@@ -29,8 +29,8 @@ public class PlayerController {
     }
 
     @PostMapping
-    public ResponseEntity<Player> createPlayer(@RequestBody Player player) {
-        Player createdPlayer = playerService.createPlayer(player);
+    public ResponseEntity<Player> createPlayer(@RequestBody Player player, @RequestParam Long clubId) {
+        Player createdPlayer = playerService.createPlayer(player, clubId);
         return ResponseEntity.ok(createdPlayer);
     }
 
