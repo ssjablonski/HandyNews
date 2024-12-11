@@ -149,6 +149,39 @@ public class PlayerService {
         return playerRepository.save(existingPlayer);
     }
 
+//    TODO przemyslec to jak zrobic dodawanie klubu do histori gracza (nie mozemy dodac endDate bo mozliwe ze caly czas gra w klubie??)
+//    TODO dodac endpointy po podjeciu decyzji jak to rozwiazac
+    @Transactional
+    public Player addClubToPlayer(Long playerId, Long clubId, LocalDate startDate, LocalDate endDate) {
+        Player player = playerRepository.findById(playerId)
+                .orElseThrow(() -> new IllegalArgumentException("Player not found"));
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new IllegalArgumentException("Club not found"));
+
+        PlayerClub newPlayerClub = new PlayerClub();
+        newPlayerClub.setPlayer(player);
+        newPlayerClub.setClub(club);
+        newPlayerClub.setStartDate(startDate);
+        newPlayerClub.setEndDate(endDate);
+
+        player.getPlayerClubs().add(newPlayerClub);
+
+        return playerRepository.save(player);
+    }
+
+    @Transactional
+    public Player addMatchToPlayer(Long playerId, PlayerMatch newMatch) {
+        Player player = playerRepository.findById(playerId)
+                .orElseThrow(() -> new IllegalArgumentException("Player not found"));
+
+        newMatch.setPlayer(player);
+        player.getPlayerMatches().add(newMatch);
+
+        return playerRepository.save(player);
+    }
+
+
+
 
 
 }
