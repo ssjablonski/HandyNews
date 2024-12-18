@@ -4,6 +4,7 @@ import com.seba.handy_news.player.PlayerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -43,5 +44,18 @@ public class ClubController {
     public ResponseEntity<Void> deleteClub(@PathVariable Long id) {
         clubService.deleteClub(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Club>> searchClubs(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) Date beforeFounded,
+            @RequestParam(required = false) Date afterFounded
+    ) {
+        List<Club> clubs = clubService.searchClubs(
+                name,city,beforeFounded,afterFounded
+        );
+        return ResponseEntity.ok(clubs);
     }
 }

@@ -6,16 +6,14 @@ import com.seba.handy_news.enums.Hand;
 import com.seba.handy_news.enums.Position;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PlayerService {
@@ -36,11 +34,6 @@ public class PlayerService {
 
     public List<Player> getAllPlayers() {
         return playerRepository.findAll();
-    }
-//    TODO trzeba sie zastanowic nad logika Club -> Team (chyba niepotrzbena i zostawic tylko club)
-    public List<Player> getAllPlayersFromTeam(Long teamId) {
-        return playerRepository.findByClubId(teamId);
-
     }
 
     public Player getPlayerById(Long id) {
@@ -66,60 +59,6 @@ public class PlayerService {
     public List<Player> getPlayersAboveWeight(double weight) {
         return playerRepository.findByWeightGreaterThan(weight);
     }
-
-
-
-    public List<Player> searchPlayers(String name, String nationality, Hand hand, Position position,
-                                      Integer minAge, Integer maxAge, Double minHeight,
-                                      Double maxHeight, Double minWeight, Double maxWeight) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Player> cq = cb.createQuery(Player.class);
-        Root<Player> player = cq.from(Player.class);
-
-        List<Predicate> predicates = new ArrayList<>();
-
-        if (name != null && !name.isBlank()) {
-            String namePattern = "%" + name.toLowerCase() + "%";
-            predicates.add(cb.or(
-                    cb.like(cb.lower(player.get("firstName")), namePattern),
-                    cb.like(cb.lower(player.get("lastName")), namePattern)
-            ));
-        }
-        if (nationality != null && !nationality.isBlank()) {
-            predicates.add(cb.equal(cb.lower(player.get("nationality")), nationality.toLowerCase()));
-        }
-        if (hand != null) {
-            predicates.add(cb.equal(player.get("hand"), hand));
-        }
-        if (position != null) {
-            predicates.add(cb.equal(player.get("position"), position));
-        }
-        if (minAge != null) {
-            LocalDate minBirthDate = LocalDate.now().minusYears(minAge);
-            predicates.add(cb.lessThanOrEqualTo(player.get("dateOfBirth"), minBirthDate));
-        }
-        if (maxAge != null) {
-            LocalDate maxBirthDate = LocalDate.now().minusYears(maxAge);
-            predicates.add(cb.greaterThanOrEqualTo(player.get("dateOfBirth"), maxBirthDate));
-        }
-        if (minHeight != null) {
-            predicates.add(cb.greaterThanOrEqualTo(player.get("height"), minHeight));
-        }
-        if (maxHeight != null) {
-            predicates.add(cb.lessThanOrEqualTo(player.get("height"), maxHeight));
-        }
-        if (minWeight != null) {
-            predicates.add(cb.greaterThanOrEqualTo(player.get("weight"), minWeight));
-        }
-        if (maxWeight != null) {
-            predicates.add(cb.lessThanOrEqualTo(player.get("weight"), maxWeight));
-        }
-
-        cq.where(predicates.toArray(new Predicate[0]));
-
-        return entityManager.createQuery(cq).getResultList();
-    }
-
 
     public Player createPlayer(Player player, Long clubId) {
         Club club = clubRepository.findById(clubId).orElseThrow(() -> new IllegalArgumentException("Club not found."));
@@ -180,8 +119,71 @@ public class PlayerService {
         return playerRepository.save(player);
     }
 
+    @Transactional
+    public List<Player> searchPlayers(String firstName, String lastName, String nationality, Hand hand, Position position,
+                                      Integer minAge, Integer maxAge, Double minHeight,
+                                      Double maxHeight, Double minWeight, Double maxWeight) {
+        StringBuilder jpql = new StringBuilder("SELECT p FROM Player p WHERE 1=1");
+        Map<String, Object> params = new HashMap<>();
 
+        if (firstName != null && !firstName.isBlank()) {
+            jpql.append(" AND LOWER(p.firstName) LIKE LOWER(:firstName)");
+            params.put("firstName", "%" + firstName + "%");
+        }
 
+        if (lastName != null && !lastName.isBlank()) {
+            jpql.append(" AND LOWER(p.lastName) LIKE LOWER(:lastName)");
+            params.put("lastName", "%" + lastName + "%");
+        }
 
+        if (minWeight != null) {
+            jpql.append(" AND p.weight >= :minWeight");
+            params.put("minWeight", minWeight);
+        }
 
+        if (maxWeight != null) {
+            jpql.append(" AND p.weight <= :maxWeight");
+            params.put("maxWeight", maxWeight);
+        }
+
+        if (minHeight != null) {
+            jpql.append(" AND p.height >= :minHeight");
+            params.put("minHeight", minHeight);
+        }
+
+        if (maxHeight != null) {
+            jpql.append(" AND p.height <= :maxHeight");
+            params.put("maxHeight", maxHeight);
+        }
+
+        if (nationality != null && !nationality.isBlank()) {
+            jpql.append(" AND LOWER(p.nationality) = LOWER(:nationality)");
+            params.put("nationality", nationality);
+        }
+
+        if (hand != null) {
+            jpql.append(" AND p.hand = :hand");
+            params.put("hand", hand);
+        }
+
+        if (position != null) {
+            jpql.append(" AND p.position = :position");
+            params.put("position", position);
+        }
+
+        if (minAge != null) {
+            jpql.append(" AND p.dateOfBirth <= :maxDateOfBirth");
+            params.put("maxDateOfBirth", LocalDate.now().minusYears(minAge));
+        }
+
+        if (maxAge != null) {
+            jpql.append(" AND p.dateOfBirth >= :minDateOfBirth");
+            params.put("minDateOfBirth", LocalDate.now().minusYears(maxAge));
+        }
+
+        TypedQuery<Player> query = entityManager.createQuery(jpql.toString(), Player.class);
+        params.forEach(query::setParameter);
+
+        return query.getResultList();
+    }
 }

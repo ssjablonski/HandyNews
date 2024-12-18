@@ -48,7 +48,8 @@ public class PlayerController {
 
     @GetMapping("/search")
     public ResponseEntity<List<Player>> searchPlayers(
-            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
             @RequestParam(required = false) String nationality,
             @RequestParam(required = false) Hand hand,
             @RequestParam(required = false) Position position,
@@ -60,7 +61,7 @@ public class PlayerController {
             @RequestParam(required = false) Double maxWeight
     ) {
         List<Player> players = playerService.searchPlayers(
-                name, nationality, hand, position, minAge, maxAge, minHeight, maxHeight, minWeight, maxWeight
+                firstName, lastName, nationality, hand, position, minAge, maxAge, minHeight, maxHeight, minWeight, maxWeight
         );
         return ResponseEntity.ok(players);
     }
