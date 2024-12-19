@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -24,7 +24,7 @@ public class Coach {
     private String firstName;
     private String lastName;
     private String nationality;
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @OneToMany(mappedBy = "coach")
     private Set<Club> clubs;

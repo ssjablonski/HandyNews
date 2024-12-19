@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -28,7 +28,7 @@ public class Player {
 
     private String lastName;
 
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     private double height;
 

@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -26,7 +26,7 @@ public class Club {
 
     private String city;
 
-    private Date founded;
+    private LocalDate founded;
 
     @ManyToOne
     private Coach coach;
