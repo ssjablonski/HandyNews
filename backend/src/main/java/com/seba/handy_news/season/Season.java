@@ -1,5 +1,6 @@
 package com.seba.handy_news.season;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.seba.handy_news.league.League;
 import com.seba.handy_news.match.Match;
 import jakarta.persistence.*;
@@ -29,6 +30,7 @@ public class Season {
 
     @ManyToOne
     @JoinColumn(name = "league_id", nullable = false)
+    @JsonBackReference
     private League league;
 
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
