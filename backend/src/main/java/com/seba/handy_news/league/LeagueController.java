@@ -1,5 +1,6 @@
 package com.seba.handy_news.league;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -7,12 +8,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/league")
+@RequiredArgsConstructor
 public class LeagueController {
     private final LeagueService leagueService;
-
-    public LeagueController(LeagueService leagueService) {
-        this.leagueService = leagueService;
-    }
 
     @GetMapping
     public ResponseEntity<List<League>> getAllLeagues() {

@@ -1,18 +1,16 @@
 package com.seba.handy_news.league;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class LeagueService {
     private final LeagueRepository leagueRepository;
 //    private final SeasonRepository seasonRepository;
-
-    public LeagueService(LeagueRepository leagueRepository) {
-        this.leagueRepository = leagueRepository;
-    }
 
     public List<League> getAllLeagues() {
         return leagueRepository.findAll();

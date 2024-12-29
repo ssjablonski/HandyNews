@@ -1,5 +1,6 @@
 package com.seba.handy_news.league;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.seba.handy_news.club.Club;
 import com.seba.handy_news.season.Season;
 import jakarta.persistence.*;
@@ -28,6 +29,7 @@ public class League {
     private String country;
 
     @OneToMany(mappedBy = "league", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Season> seasons;
 
     @OneToMany
