@@ -15,5 +15,12 @@ spring:
     user:
       name: user
       password: user
+application:
+  security:
+    jwt:
+      secretKey: 8e5c7a9c0f5d4e2ab5c56f7c38b5f9d1f83eeb8f1f5a8e3c4e9a8f3c5b7a4e6f1
+logging:
+  level:
+    org.springframework.security: DEBUG
 
 
