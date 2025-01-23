@@ -1,61 +1,61 @@
 package com.seba.handy_news.club;
 
-import com.seba.handy_news.player.PlayerService;
+import com.seba.handy_news.season.SeasonClub.SeasonClub;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/club")
 public class ClubController {
     private final ClubService clubService;
 
-    public ClubController(ClubService clubService, PlayerService playerService) {
-        this.clubService = clubService;
+    @GetMapping("/{id}")
+    public ResponseEntity<Club> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(clubService.getClubById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Club>> getAllClubs() {
-        List<Club> clubs = clubService.getAllClubs();
-        return ResponseEntity.ok(clubs);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Club> getClubById(@PathVariable Long id) {
-        Club club = clubService.getClubById(id);
-        return ResponseEntity.ok(club);
+    public ResponseEntity<List<Club>> getAll() {
+        return ResponseEntity.ok(clubService.getAllClubs());
     }
 
     @PostMapping
-    public ResponseEntity<Club> createClub(@RequestBody Club club) {
-        Club createdClub = clubService.createClub(club);
-        return ResponseEntity.ok(createdClub);
+    public ResponseEntity<Club> create(@RequestBody Club club) {
+        return new ResponseEntity<>(clubService.createClub(club), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Club> updateClub(@PathVariable Long id, @RequestBody Club updatedClub) {
-        Club updated = clubService.updateClub(id, updatedClub);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<Club> update(@PathVariable Long id, @RequestBody Club club) {
+        return ResponseEntity.ok(clubService.updateClub(id, club));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClub(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         clubService.deleteClub(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<Club>> searchClubs(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String city,
-            @RequestParam(required = false) Date beforeFounded,
-            @RequestParam(required = false) Date afterFounded
-    ) {
-        List<Club> clubs = clubService.searchClubs(
-                name,city,beforeFounded,afterFounded
-        );
-        return ResponseEntity.ok(clubs);
+    @PostMapping("/{clubId}/season-clubs")
+    public ResponseEntity<Void> addSeasonClubToClub(@PathVariable Long clubId, @RequestBody SeasonClub seasonClub) {
+        clubService.addSeasonClubToClub(clubId, seasonClub);
+        return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/{clubId}/season-clubs/{seasonClubId}")
+    public ResponseEntity<Void> removeSeasonClubFromClub(@PathVariable Long clubId, @PathVariable Long seasonClubId) {
+        clubService.removeSeasonClubFromClub(clubId, seasonClubId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{clubId}/season-clubs")
+    public ResponseEntity<List<SeasonClub>> getAllSeasonClubsFromClub(@PathVariable Long clubId) {
+        return ResponseEntity.ok(clubService.getAllSeasonClubsFromClub(clubId));
+    }
+
+
 }

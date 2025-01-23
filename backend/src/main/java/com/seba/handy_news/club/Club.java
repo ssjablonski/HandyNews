@@ -1,14 +1,13 @@
 package com.seba.handy_news.club;
 
-import com.seba.handy_news.coach.Coach;
-import com.seba.handy_news.league.League;
+import com.seba.handy_news.season.SeasonClub.SeasonClub;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,16 +22,10 @@ public class Club {
     private Long id;
 
     private String name;
-
     private String city;
+    private String country;
 
-    private LocalDate founded;
-
-    @ManyToOne
-    private Coach coach;
-
-    @ManyToOne
-    private League league;
-
+    @OneToMany(mappedBy = "club")
+    private List<SeasonClub> seasonClubs;
 
 }

@@ -1,7 +1,6 @@
 package com.seba.handy_news.league;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.seba.handy_news.club.Club;
 import com.seba.handy_news.season.Season;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -25,14 +23,10 @@ public class League {
     private Long id;
 
     private String name;
-
     private String country;
 
     @OneToMany(mappedBy = "league", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private Set<Season> seasons;
-
-    @OneToMany
-    private List<Club> clubs;
+    private List<Season> seasons;
 
 }

@@ -14,8 +14,7 @@ public class MatchController {
 
     @GetMapping
     public ResponseEntity<List<Match>> getAllMatches() {
-        List<Match> matches = matchService.getAllMatches();
-        return ResponseEntity.ok(matches);
+        return ResponseEntity.ok(matchService.getAllMatches());
     }
 
     @GetMapping("/season/{id}")
@@ -26,8 +25,7 @@ public class MatchController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Match> getMatchById(@PathVariable Long id) {
-        Match match = matchService.getMatchById(id);
-        return ResponseEntity.ok(match);
+        return ResponseEntity.ok(matchService.getMatchById(id));
     }
 
     @PostMapping
@@ -47,6 +45,8 @@ public class MatchController {
         matchService.deleteMatch(id);
         return ResponseEntity.noContent().build();
     }
+
+//    @PutMapping("/{id}/pla")
 
 
 }
