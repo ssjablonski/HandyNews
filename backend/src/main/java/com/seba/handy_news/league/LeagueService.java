@@ -23,18 +23,14 @@ public class LeagueService {
         return leagueRepository.save(league);
     }
 
-    @Transactional
     public void deleteLeague(Long id) {
         leagueRepository.deleteById(id);
     }
 
-    @Transactional
     public League updateLeague(Long id, League league) {
         League existingLeague = getLeagueById(id);
         existingLeague.setCountry(league.getCountry());
         existingLeague.setName(league.getName());
         return leagueRepository.save(existingLeague);
     }
-
-//    TODO - ew. search? Zastanow sie czy chcesz miec wyszukiwarke dla wszystkiego, może połączona ktora pokazuje wszystko mozliwe???
 }

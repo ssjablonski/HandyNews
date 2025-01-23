@@ -1,5 +1,6 @@
 package com.seba.handy_news.club;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.seba.handy_news.league.League;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class Club {
     private String city;
 
     @ManyToOne
+    @JsonBackReference
     private League league;
 
 }

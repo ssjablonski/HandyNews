@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Club Form</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h1 th:text="${club.id == null ? 'Add New Club' : 'Edit Club'}" class="my-4"></h1>
+    <form th:action="@{/admin/clubs/create}" th:if="${club.id == null}" th:object="${club}" method="post">
+        <div class="form-group">
+            <label>Name:</label>
+            <input type="text" th:field="*{name}" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>City:</label>
+            <input type="text" th:field="*{city}" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>League ID:</label>
+            <input type="text" name="leagueId" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+    <form th:action="@{'/admin/clubs/edit/' + ${club.id}}" th:unless="${club.id == null}" th:object="${club}" method="post">
+        <div class="form-group">
+            <label>Name:</label>
+            <input type="text" th:field="*{name}" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>City:</label>
+            <input type="text" th:field="*{city}" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>League ID:</label>
+            <input type="text" name="leagueId" th:value="${club.league != null ? club.league.id : ''}" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

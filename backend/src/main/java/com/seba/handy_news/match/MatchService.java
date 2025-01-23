@@ -22,6 +22,11 @@ public class MatchService {
         return matchRepository.findAll();
     }
 
+    public List<Match> getAllMatchesBySeason(Long seasonId) {
+        return matchRepository.findBySeasonId(seasonId);
+    }
+
+
     public Match getMatchById(Long id) {
         return matchRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Match not found with id: " + id));
     }

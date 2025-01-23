@@ -1,6 +1,9 @@
 package com.seba.handy_news.club;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,9 +27,9 @@ public class ClubController {
         return ResponseEntity.ok(club);
     }
 
-    @PostMapping
-    public ResponseEntity<Club> createClub(@RequestBody Club club) {
-        Club createdClub = clubService.createClub(club);
+    @PostMapping("/league/{leagueId}")
+    public ResponseEntity<Club> createClub(@RequestBody Club club, @PathVariable Long leagueId) {
+        Club createdClub = clubService.createClub(club, leagueId);
         return ResponseEntity.ok(createdClub);
     }
 
@@ -41,4 +44,18 @@ public class ClubController {
         clubService.deleteClub(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<Club>> searchClubs(@RequestParam(required = false) String name,
+                                                  @RequestParam(required = false) String city,
+                                                  @RequestParam(required = false) Long leagueId,
+                                                  @RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "10") int size,
+                                                  @RequestParam(defaultValue = "name") String sortBy) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(sortBy));
+        Page<Club> clubs = clubService.searchClubs(name, city, leagueId, pageRequest);
+        return ResponseEntity.ok(clubs);
+    }
+
+
 }

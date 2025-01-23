@@ -23,6 +23,10 @@ public class SeasonService {
         return seasonRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Season not found with id: " + id));
     }
 
+    public List<Season> getAllSeasonsByLeague(Long leagueId) {
+        return seasonRepository.findByLeagueId(leagueId);
+    }
+
     public Season createSeason(Long leagueId, Season season) {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new EntityNotFoundException("League not found with id: " + leagueId));
         season.setLeague(league);
