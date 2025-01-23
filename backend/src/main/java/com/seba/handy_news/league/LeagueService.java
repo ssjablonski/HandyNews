@@ -10,7 +10,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LeagueService {
     private final LeagueRepository leagueRepository;
-//    private final SeasonRepository seasonRepository;
 
     public List<League> getAllLeagues() {
         return leagueRepository.findAll();
@@ -31,11 +30,9 @@ public class LeagueService {
 
     @Transactional
     public League updateLeague(Long id, League league) {
-        League existingLeague = leagueRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("League not found"));
-
+        League existingLeague = getLeagueById(id);
         existingLeague.setCountry(league.getCountry());
         existingLeague.setName(league.getName());
-//        TODO - powinienem updatowac tez kolumny z relacjami??
         return leagueRepository.save(existingLeague);
     }
 

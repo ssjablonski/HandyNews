@@ -1,7 +1,7 @@
 package com.seba.handy_news.match;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.seba.handy_news.club.Club;
-import com.seba.handy_news.player.PlayerMatch;
 import com.seba.handy_news.season.Season;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -38,11 +37,8 @@ public class Match {
     @JoinColumn(name = "away_team_id", nullable = false)
     private Club awayTeam;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "season_id", nullable = false)
+    @JsonBackReference
     private Season season;
-
-    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
-    private Set<PlayerMatch> playerMatches;
-
 }

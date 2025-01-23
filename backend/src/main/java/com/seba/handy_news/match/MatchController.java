@@ -18,21 +18,15 @@ public class MatchController {
         return ResponseEntity.ok(matches);
     }
 
-    @GetMapping("/season/{id}")
-    public ResponseEntity<List<Match>> getMatchesFromSeason(@PathVariable Long id) {
-        List<Match> matches = matchService.getAllMatchesFromSeason(id);
-        return ResponseEntity.ok(matches);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<Match> getMatchById(@PathVariable Long id) {
         Match match = matchService.getMatchById(id);
         return ResponseEntity.ok(match);
     }
 
-    @PostMapping
-    public ResponseEntity<Match> createMatch(@RequestBody Match match, @RequestParam Long seasonId) {
-        Match createdMatch = matchService.createMatch(match, seasonId);
+    @PostMapping("/{seasonId}")
+    public ResponseEntity<Match> createMatch(@PathVariable Long seasonId, @RequestBody Match match, @RequestParam Long homeId, @RequestParam Long awayId) {
+        Match createdMatch = matchService.createMatch(seasonId, match, homeId, awayId);
         return ResponseEntity.ok(createdMatch);
     }
 

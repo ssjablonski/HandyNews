@@ -9,8 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,14 +25,13 @@ public class Season {
     private Long id;
 
     private String name;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private int year;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "league_id", nullable = false)
     @JsonBackReference
     private League league;
 
-    @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
-    private Set<Match> matches;
+    @OneToMany(mappedBy = "season", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Match> matches = new ArrayList<>();
 }

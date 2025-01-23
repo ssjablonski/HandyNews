@@ -14,14 +14,12 @@ public class LeagueController {
 
     @GetMapping
     public ResponseEntity<List<League>> getAllLeagues() {
-        List<League> leagues = leagueService.getAllLeagues();
-        return ResponseEntity.ok(leagues);
+        return ResponseEntity.ok(leagueService.getAllLeagues());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<League> getLeagueById(@PathVariable Long id) {
-        League league = leagueService.getLeagueById(id);
-        return ResponseEntity.ok(league);
+        return ResponseEntity.ok(leagueService.getLeagueById(id));
     }
 
     @PostMapping

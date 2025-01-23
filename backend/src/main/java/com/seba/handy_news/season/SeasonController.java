@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -12,21 +13,20 @@ import java.util.Set;
 public class SeasonController {
     private final SeasonService seasonService;
 
+    @GetMapping
+    public ResponseEntity<List<Season>> getAllSeasons() {
+        return ResponseEntity.ok(seasonService.getAllSeasons());
+    }
+
     @GetMapping("/{seasonId}")
     public ResponseEntity<Season> getSeasonById(@PathVariable Long seasonId) {
         Season season = seasonService.getSeasonById(seasonId);
         return ResponseEntity.ok(season);
     }
 
-    @GetMapping("/league/{leagueId}")
-    public ResponseEntity<Set<Season>> getAllSeasonsFromLeague(@PathVariable Long leagueId) {
-        Set<Season> seasons = seasonService.getAllSeasonsFromLeague(leagueId);
-        return ResponseEntity.ok(seasons);
-    }
-
-    @PostMapping
-    public ResponseEntity<Season> createSeason(@RequestBody Season season, @RequestParam Long leagueId) {
-        Season createdSeason = seasonService.createSeason(season, leagueId);
+    @PostMapping("/{leagueId}")
+    public ResponseEntity<Season> createSeason(@PathVariable Long leagueId, @RequestBody Season season) {
+        Season createdSeason = seasonService.createSeason(leagueId, season);
         return ResponseEntity.ok(createdSeason);
     }
 
@@ -40,5 +40,10 @@ public class SeasonController {
     public ResponseEntity<Void> deleteSeason(@PathVariable Long id) {
         seasonService.deleteSeason(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Season>> searchSeasons(@RequestParam int year) {
+        return ResponseEntity.ok(seasonService.findSeasonByYear(year));
     }
 }

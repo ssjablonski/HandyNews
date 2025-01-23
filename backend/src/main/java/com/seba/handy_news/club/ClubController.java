@@ -1,25 +1,21 @@
 package com.seba.handy_news.club;
 
-import com.seba.handy_news.player.PlayerService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("api/club")
+@RequiredArgsConstructor
 public class ClubController {
-    private final ClubService clubService;
 
-    public ClubController(ClubService clubService, PlayerService playerService) {
-        this.clubService = clubService;
-    }
+    private final ClubService clubService;
 
     @GetMapping
     public ResponseEntity<List<Club>> getAllClubs() {
-        List<Club> clubs = clubService.getAllClubs();
-        return ResponseEntity.ok(clubs);
+        return ResponseEntity.ok(clubService.getAllClubs());
     }
 
     @GetMapping("/{id}")
@@ -44,18 +40,5 @@ public class ClubController {
     public ResponseEntity<Void> deleteClub(@PathVariable Long id) {
         clubService.deleteClub(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<Club>> searchClubs(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String city,
-            @RequestParam(required = false) Date beforeFounded,
-            @RequestParam(required = false) Date afterFounded
-    ) {
-        List<Club> clubs = clubService.searchClubs(
-                name,city,beforeFounded,afterFounded
-        );
-        return ResponseEntity.ok(clubs);
     }
 }

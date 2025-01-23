@@ -2,12 +2,12 @@ package com.seba.handy_news.season;
 
 import com.seba.handy_news.league.League;
 import com.seba.handy_news.league.LeagueRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -15,39 +15,33 @@ public class SeasonService {
     private final SeasonRepository seasonRepository;
     private final LeagueRepository leagueRepository;
 
-    public Set<Season> getAllSeasonsFromLeague(Long leagueId) {
-        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new IllegalArgumentException("League not found"));
-        return league.getSeasons();
+    public List<Season> getAllSeasons() {
+        return seasonRepository.findAll();
     }
 
     public Season getSeasonById(Long id) {
-        return seasonRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Season not found"));
+        return seasonRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Season not found with id: " + id));
     }
 
-    public Season createSeason(Season season, Long leagueId) {
-        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new IllegalArgumentException("League not found"));
+    public Season createSeason(Long leagueId, Season season) {
+        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new EntityNotFoundException("League not found with id: " + leagueId));
         season.setLeague(league);
-        Season savedSeason = seasonRepository.save(season);
-        league.getSeasons().add(savedSeason);
-        leagueRepository.save(league);
-        return savedSeason;
+        return seasonRepository.save(season);
     }
 
-    @Transactional
     public void deleteSeason(Long seasonId) {
         seasonRepository.deleteById(seasonId);
     }
 
     @Transactional
     public Season updateSeason(Long id, Season updatedSeason) {
-        Season existingSeason = seasonRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Season not found"));
-
+        Season existingSeason = getSeasonById(id);
         existingSeason.setName(updatedSeason.getName());
-        existingSeason.setStartDate(updatedSeason.getStartDate());
-        existingSeason.setEndDate(updatedSeason.getEndDate());
-        existingSeason.setLeague(updatedSeason.getLeague());
-        existingSeason.setMatches(updatedSeason.getMatches());
-
+        existingSeason.setYear(updatedSeason.getYear());
         return seasonRepository.save(existingSeason);
+    }
+
+    public List<Season> findSeasonByYear(int year) {
+        return seasonRepository.findByYear(year);
     }
 }
