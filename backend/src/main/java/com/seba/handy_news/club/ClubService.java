@@ -1,96 +1,69 @@
 package com.seba.handy_news.club;
 
-import com.seba.handy_news.enums.Hand;
-import com.seba.handy_news.enums.Position;
-import com.seba.handy_news.player.Player;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
+
+import com.seba.handy_news.season.SeasonClub.SeasonClub;
+import com.seba.handy_news.season.SeasonRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class ClubService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     private final ClubRepository clubRepository;
+    private final SeasonRepository seasonRepository;
 
-    public ClubService(ClubRepository clubRepository) {
-        this.clubRepository = clubRepository;
+    public Club getClubById(Long id) {
+        return clubRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Club not found with id: " + id));
     }
 
     public List<Club> getAllClubs() {
-        return this.clubRepository.findAll();
-    }
-
-    public Club getClubById(Long id) {
-        return this.clubRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Club not found"));
-    }
-
-    public List<Club> getClubsByName(String name) {
-        return this.clubRepository.findClubByName(name);
-    }
-
-    public List<Club> getClubsByCity(String city) {
-        return this.clubRepository.findClubByCity(city);
+        return clubRepository.findAll();
     }
 
     public Club createClub(Club club) {
-        return this.clubRepository.save((club));
+        return clubRepository.save(club);
     }
 
-    @Transactional
-    public void deleteClub(Long clubId) {
-        clubRepository.deleteById(clubId);
-    }
-
-    @Transactional
     public Club updateClub(Long id, Club updatedClub) {
-        Club existingClub = clubRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Club not found"));
-
-        existingClub.setCity(updatedClub.getCity());
+        Club existingClub = getClubById(id);
         existingClub.setName(updatedClub.getName());
-        existingClub.setFounded(updatedClub.getFounded());
-
+        existingClub.setCity(updatedClub.getCity());
+        existingClub.setCountry(updatedClub.getCountry());
         return clubRepository.save(existingClub);
     }
 
+    public void deleteClub(Long id) {
+        clubRepository.deleteById(id);
+    }
+
+    public void addSeasonClubToClub(Long clubId, SeasonClub seasonClub) {
+        Club club = getClubById(clubId);
+        club.getSeasonClubs().add(seasonClub);
+        clubRepository.save(club);
+    }
+
     @Transactional
-    public List<Club> searchClubs(String name, String city, Date beforeFounded, Date afterFounded) {
-        StringBuilder jpql = new StringBuilder("SELECT c FROM Club c WHERE 1=1");
-        Map<String, Object> params = new HashMap<>();
+    public void removeSeasonClubFromClub(Long clubId, Long seasonClubId) {
+        Club club = getClubById(clubId);
+        SeasonClub seasonClubToRemove = club.getSeasonClubs().stream()
+                .filter(sc -> sc.getId().equals(seasonClubId))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("SeasonClub not found in the club with id: " + clubId));
 
-        if (name != null && !name.isBlank()) {
-            jpql.append(" AND LOWER(c.name) LIKE LOWER(:name)");
-            params.put("name", "%" + name + "%");
-        }
+        club.getSeasonClubs().remove(seasonClubToRemove);
+        seasonClubToRemove.setClub(null);
+        clubRepository.save(club);
+    }
 
-        if (city != null && !city.isBlank()) {
-            jpql.append(" AND LOWER(c.city) LIKE LOWER(:city)");
-            params.put("city", "%" + city + "%");
-        }
-
-        if (beforeFounded != null) {
-            jpql.append(" AND c.founded <= :beforeFounded");
-            params.put("beforeFounded", beforeFounded);
-        }
-
-        if (afterFounded != null) {
-            jpql.append(" AND c.founded >= :afterFounded");
-            params.put("afterFounded", afterFounded);
-        }
-
-        TypedQuery<Club> query = entityManager.createQuery(jpql.toString(), Club.class);
-        params.forEach(query::setParameter);
-
-        return query.getResultList();
+    public List<SeasonClub> getAllSeasonClubsFromClub(Long clubId) {
+        Club club = getClubById(clubId);
+        return new ArrayList<>(club.getSeasonClubs());
     }
 }
