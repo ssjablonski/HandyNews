@@ -1,6 +1,7 @@
 package com.seba.handy_news.club;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.seba.handy_news.league.League;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,7 +26,7 @@ public class Club {
     private String city;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "seasons"})
     private League league;
 
 }

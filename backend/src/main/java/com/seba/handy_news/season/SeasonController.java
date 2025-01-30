@@ -42,7 +42,7 @@ public class SeasonController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/search")
+    @GetMapping("/year")
     public ResponseEntity<List<Season>> searchSeasons(@RequestParam int year) {
         return ResponseEntity.ok(seasonService.findSeasonByYear(year));
     }

@@ -1,6 +1,7 @@
 package com.seba.handy_news.match;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.seba.handy_news.club.Club;
 import com.seba.handy_news.season.Season;
 import jakarta.persistence.*;

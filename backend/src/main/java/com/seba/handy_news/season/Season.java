@@ -1,6 +1,8 @@
 package com.seba.handy_news.season;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.seba.handy_news.league.League;
 import com.seba.handy_news.match.Match;
 import jakarta.persistence.*;
@@ -29,9 +31,10 @@ public class Season {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "league_id", nullable = false)
-    @JsonBackReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "seasons"})
     private League league;
 
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Match> matches = new ArrayList<>();
 }

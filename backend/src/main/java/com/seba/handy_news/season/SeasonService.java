@@ -46,6 +46,6 @@ public class SeasonService {
     }
 
     public List<Season> findSeasonByYear(int year) {
-        return seasonRepository.findByYear(year);
+        return seasonRepository.findSeasonsByYearNative(year);
     }
 }

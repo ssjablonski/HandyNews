@@ -51,6 +51,7 @@ public class ClubService {
         return clubRepository.save(existingClub);
     }
 
+//    najlepiej dodac search do repo, query builder
     public Page<Club> searchClubs(String name, String city, Long leagueId, Pageable pageable) {
         StringBuilder jpql = new StringBuilder("SELECT c FROM Club c WHERE 1=1");
         if (name != null && !name.isEmpty()) {
