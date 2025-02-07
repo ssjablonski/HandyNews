@@ -1,1 +1,20 @@
-<p>header works!</p>
+<nav>
+  <mat-toolbar
+    class="d-flex justify-content-between align-items-center nav-bar"
+  >
+    <span>Handy News</span>
+    <div>
+      @if (!user) {
+      <button mat-stroked-button routerLink="/register" class="mx-2">
+        Register
+      </button>
+      <button mat-stroked-button routerLink="/login" class="mx-2">Login</button>
+      } @else {
+      <button mat-stroked-button routerLink="/" class="mx-2">Main page</button>
+      <button mat-stroked-button routerLink="/matches" class="mx-2">
+        Mecze
+      </button>
+      }
+    </div>
+  </mat-toolbar>
+</nav>
