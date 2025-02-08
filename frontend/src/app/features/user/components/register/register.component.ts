@@ -18,9 +18,9 @@ import { UserRegisterForm } from '../../models/userRegisterForm.model';
 import { UserAddressForm } from '../../models/userAddressForm.model';
 import { pastDate } from '../../../../core/validators/pastDate.validator';
 import { validPhoneNumber } from '../../../../core/validators/validPhoneNumber.validator';
-import { AuthService } from '../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RegisterData } from '../../models/registerData.model';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -41,7 +41,7 @@ import { RegisterData } from '../../models/registerData.model';
 })
 export class RegisterComponent {
   public constructor(
-    private authService: AuthService,
+    private userService: UserService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {}
@@ -83,7 +83,7 @@ export class RegisterComponent {
 
   protected onSubmit(): void {
     const registerFormData = this.registerForm.value;
-    this.authService.register(registerFormData as RegisterData).subscribe({
+    this.userService.register(registerFormData as RegisterData).subscribe({
       next: () => {
         this.snackBar.open(
           'Your account has been successfully created.',
@@ -94,7 +94,7 @@ export class RegisterComponent {
             verticalPosition: 'top',
           }
         );
-        this.router.navigate(['/main-page']);
+        this.router.navigate(['/dashboard']);
       },
     });
   }

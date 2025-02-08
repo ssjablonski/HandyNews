@@ -22,27 +22,63 @@
       >
         Login
       </button>
-      } @else {
-      <button
-        mat-stroked-button
-        routerLink="/"
-        routerLinkActive="active"
-        class="mx-2"
-      >
+      } @if (!user) {
+      <button mat-stroked-button routerLink="/dashboard" class="mx-2">
         Main page
       </button>
-      <button
-        mat-stroked-button
-        routerLink="/matches"
-        routerLinkActive="active"
-        class="mx-2"
-      >
-        Mecze
-      </button>
-      <button mat-stroked-button color="warn" class="mx-2" (click)="logOut()">
+      <button mat-stroked-button class="danger mx-2" (click)="logOut()">
         Log out
       </button>
       }
     </div>
   </mat-toolbar>
+  @if (user) {
+  <mat-toolbar class="d-flex justify-content-center mb-3">
+    <div class="example-button-container">
+      <button
+        mat-stroked-button
+        class="navbutton p-4"
+        routerLink="/dashboard/leagues"
+        routerLinkActive="active"
+      >
+        <mat-icon>emoji_events</mat-icon>
+        Leagues
+      </button>
+    </div>
+    <div class="example-button-container">
+      <button
+        mat-stroked-button
+        class="navbutton p-4"
+        routerLink="/dashboard/seasons"
+        routerLinkActive="active"
+      >
+        <mat-icon>calendar_month</mat-icon>
+        Seasons
+      </button>
+    </div>
+    <div class="example-button-container">
+      <button
+        mat-stroked-button
+        class="navbutton p-4"
+        routerLink="/dashboard/clubs"
+        routerLinkActive="active"
+      >
+        <mat-icon>calendar_month</mat-icon>
+        Clubs
+      </button>
+    </div>
+    <div class="example-button-container">
+      <button
+        mat-stroked-button
+        class="navbutton p-4"
+        routerLink="/dashboard"
+        routerLinkActive="active"
+      >
+        <mat-icon>sports_handball</mat-icon>
+        Matches
+      </button>
+    </div>
+  </mat-toolbar>
+
+  }
 </nav>

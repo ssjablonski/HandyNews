@@ -12,8 +12,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
 import { LoginData } from '../../models/loginData.model';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -30,7 +30,7 @@ import { LoginData } from '../../models/loginData.model';
 })
 export class LoginComponent {
   public constructor(
-    private authService: AuthService,
+    private userService: UserService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {}
@@ -46,14 +46,14 @@ export class LoginComponent {
 
   protected onSubmit(): void {
     const loginFormData = this.loginForm.value;
-    this.authService.login(loginFormData as LoginData).subscribe({
+    this.userService.login(loginFormData as LoginData).subscribe({
       next: () => {
         this.snackBar.open('You have successfully logged in.', 'Close', {
           duration: 2000,
           horizontalPosition: 'right',
           verticalPosition: 'top',
         });
-        this.router.navigate(['/main-page']);
+        this.router.navigate(['/dashboard']);
       },
     });
   }

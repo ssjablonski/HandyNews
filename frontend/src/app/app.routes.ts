@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
 import { HomePageComponent } from './core/layout/home-page/home-page.component';
 import { PageNotFoundComponent } from './core/layout/page-not-found/page-not-found.component';
-import { LoginComponent } from './features/auth/components/login/login.component';
-import { RegisterComponent } from './features/auth/components/register/register.component';
-import { authGuard } from './core/guards/auth.guard';
+import { authMatchGuard } from './core/guards/auth-match.guard';
+import { LoginComponent } from './features/user/components/login/login.component';
+import { RegisterComponent } from './features/user/components/register/register.component';
 
 export const routes: Routes = [
   {
@@ -19,12 +19,10 @@ export const routes: Routes = [
     component: HomePageComponent,
   },
   {
-    path: 'main-page',
+    path: 'user',
     loadChildren: () =>
-      import('./features/main-page/main-page.routes').then(
-        (m) => m.mainPageRoutes
-      ),
-    canMatch: [authGuard],
+      import('./features/user/user.routes').then((m) => m.userRoutes),
+    canMatch: [authMatchGuard],
   },
   {
     path: 'page-not-found',

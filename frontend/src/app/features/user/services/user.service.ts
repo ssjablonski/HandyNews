@@ -1,21 +1,25 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
 import { environment } from '../../../../environments/environment';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { LoginData } from '../models/loginData.model';
 import { LoginResponse } from '../models/loginResponse.model';
 import { RegisterData } from '../models/registerData.model';
+import { DecodedToken } from '../models/decodedToken.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class UserService {
   private apiUrl = environment.apiUrl;
   private userSubject = new BehaviorSubject<string | null>(null);
   public user$ = this.userSubject.asObservable();
 
-  public constructor(private http: HttpClient, private router: Router) {}
+  public constructor(private http: HttpClient, private router: Router) {
+    this.checkIfLoggedIn();
+  }
 
   public login(loginData: LoginData): Observable<LoginResponse> {
     return this.http
@@ -66,5 +70,40 @@ export class AuthService {
 
   public getUserId(): string | null {
     return localStorage.getItem('userId');
+  }
+
+  private decodeToken(token: string): DecodedToken | null {
+    try {
+      return jwtDecode<DecodedToken>(token);
+    } catch (err) {
+      console.error('Error decoding token', err);
+
+      return null;
+    }
+  }
+
+  private isTokenExpired(token: string): boolean {
+    if (!token) {
+      return true;
+    }
+
+    const expirationDate = new Date(this.decodeToken(token)!.exp * 1000);
+
+    return expirationDate < new Date();
+  }
+
+  public checkTokenExpiration(): void {
+    const token = this.getToken();
+
+    if (token && this.isTokenExpired(token)) {
+      this.logout();
+    }
+  }
+
+  public checkIfLoggedIn(): void {
+    const token = this.getToken();
+    if (token) {
+      this.userSubject.next(this.getUserId());
+    }
   }
 }

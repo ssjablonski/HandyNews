@@ -2,6 +2,16 @@
   flex: 1 1 auto;
 }
 
-.active {
-  background-color: #6200ae;
+.navbutton {
+  border-radius: 0;
+  border: none; /* Domyślnie bez obramowania */
+  background: transparent;
+}
+
+.navbutton.active {
+  border-bottom: 3px solid #a170f6; /* Nadpisujemy tylko border-bottom */
+}
+
+.danger {
+  background-color: #bb2d3b;
 }
