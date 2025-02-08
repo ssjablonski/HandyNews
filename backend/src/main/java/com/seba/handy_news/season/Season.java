@@ -31,10 +31,10 @@ public class Season {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "league_id", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "seasons"})
+    @JsonBackReference("league-seasons") // Zmiana tutaj
     private League league;
 
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("season-matches") // Dodanie nazwy referencji
     private List<Match> matches = new ArrayList<>();
 }

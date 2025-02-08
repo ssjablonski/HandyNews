@@ -1,6 +1,9 @@
 package com.seba.handy_news.league;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,5 +41,16 @@ public class LeagueController {
     public ResponseEntity<Void> deleteLeague(@PathVariable Long id) {
         leagueService.deleteLeague(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<League>> searchLeagues(@RequestParam(required = false) String name,
+                                                      @RequestParam(required = false) String country,
+                                                      @RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "10") int size,
+                                                      @RequestParam(defaultValue = "name") String sortBy) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(sortBy));
+        Page<League> leagues = leagueService.searchLeagues(name, country, pageRequest);
+        return ResponseEntity.ok(leagues);
     }
 }

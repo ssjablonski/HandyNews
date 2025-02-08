@@ -39,7 +39,7 @@ public class Match {
     private Club awayTeam;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "season_id", nullable = false)
-    @JsonBackReference
+    @JoinColumn(name = "season_id")
+    @JsonBackReference("season-matches") // Dodanie odpowiadającej referencji
     private Season season;
 }

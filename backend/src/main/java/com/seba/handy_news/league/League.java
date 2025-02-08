@@ -27,9 +27,9 @@ public class League {
 
     private String name;
     private String country;
+    private String logoUrl;
 
     @OneToMany(mappedBy = "league", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    @JsonIgnoreProperties({"seasons"})
+    @JsonManagedReference("league-seasons") // Dodanie nazwy referencji
     private List<Season> seasons = new ArrayList<>();
 }

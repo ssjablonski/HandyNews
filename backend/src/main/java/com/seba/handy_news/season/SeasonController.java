@@ -1,6 +1,9 @@
 package com.seba.handy_news.season;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,5 +48,17 @@ public class SeasonController {
     @GetMapping("/year")
     public ResponseEntity<List<Season>> searchSeasons(@RequestParam int year) {
         return ResponseEntity.ok(seasonService.findSeasonByYear(year));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<Season>> searchSeasons(@RequestParam(required = false) String name,
+                                                      @RequestParam(required = false) Integer year,
+                                                      @RequestParam(required = false) Long leagueId,
+                                                      @RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "10") int size,
+                                                      @RequestParam(defaultValue = "name") String sortBy) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(sortBy));
+        Page<Season> seasons = seasonService.searchSeasons(name, year, leagueId, pageRequest);
+        return ResponseEntity.ok(seasons);
     }
 }

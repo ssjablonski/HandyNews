@@ -25,6 +25,8 @@ public class Club {
 
     private String city;
 
+    private String logoUrl;
+
     @ManyToOne
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "seasons"})
     private League league;
