@@ -46,15 +46,13 @@ public class MatchController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<Page<Match>> searchMatches(@RequestParam(required = false) Long seasonId,
-                                                     @RequestParam(required = false) Long homeTeamId,
-                                                     @RequestParam(required = false) Long awayTeamId,
+    @PostMapping("/search")
+    public ResponseEntity<Page<Match>> searchMatches(@RequestBody MatchFilters filters,
                                                      @RequestParam(defaultValue = "0") int page,
-                                                     @RequestParam(defaultValue = "10") int size,
-                                                     @RequestParam(defaultValue = "date") String sortBy) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(sortBy));
-        Page<Match> matches = matchService.searchMatches(seasonId, homeTeamId, awayTeamId, pageRequest);
+                                                     @RequestParam(defaultValue = "10") int size) {
+        Sort sort = Sort.by(Sort.Direction.fromString(filters.getSortDirection()), filters.getSortBy());
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+        Page<Match> matches = matchService.searchMatches(filters.getClubName(), filters.getDateFrom(), filters.getDateTo(), filters.getSeasonYear(), filters.getLeagueId(), filters.getCompleted(), pageRequest);
         return ResponseEntity.ok(matches);
     }
 }

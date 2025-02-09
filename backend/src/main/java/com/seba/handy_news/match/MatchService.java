@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -64,45 +65,72 @@ public class MatchService {
         return matchRepository.save(existingMatch);
     }
 
-    public Page<Match> searchMatches(Long seasonId, Long homeTeamId, Long awayTeamId, Pageable pageable) {
+    public Page<Match> searchMatches(String clubName, String dateFrom, String dateTo, Integer seasonYear, Long leagueId, Boolean completed, Pageable pageable) {
         StringBuilder jpql = new StringBuilder("SELECT m FROM Match m WHERE 1=1");
-        if (seasonId != null) {
-            jpql.append(" AND m.season.id = :seasonId");
+        if (clubName != null && !clubName.isEmpty()) {
+            jpql.append(" AND (m.homeTeam.name LIKE :clubName OR m.awayTeam.name LIKE :clubName)");
         }
-        if (homeTeamId != null) {
-            jpql.append(" AND m.homeTeam.id = :homeTeamId");
+        if (dateFrom != null) {
+            jpql.append(" AND m.date >= :dateFrom");
         }
-        if (awayTeamId != null) {
-            jpql.append(" AND m.awayTeam.id = :awayTeamId");
+        if (dateTo != null) {
+            jpql.append(" AND m.date <= :dateTo");
+        }
+        if (seasonYear != null) {
+            jpql.append(" AND m.season.year = :seasonYear");
+        }
+        if (leagueId != null) {
+            jpql.append(" AND m.season.league.id = :leagueId");
+        }
+        if (completed != null) {
+            jpql.append(" AND m.isFinished = :completed");
         }
         Query query = entityManager.createQuery(jpql.toString(), Match.class);
-        if (seasonId != null) {
-            query.setParameter("seasonId", seasonId);
+        if (clubName != null && !clubName.isEmpty()) {
+            query.setParameter("clubName", "%" + clubName + "%");
         }
-        if (homeTeamId != null) {
-            query.setParameter("homeTeamId", homeTeamId);
+        if (dateFrom != null) {
+            query.setParameter("dateFrom", LocalDate.parse(dateFrom));
         }
-        if (awayTeamId != null) {
-            query.setParameter("awayTeamId", awayTeamId);
+        if (dateTo != null) {
+            query.setParameter("dateTo", LocalDate.parse(dateTo));
+        }
+        if (seasonYear != null) {
+            query.setParameter("seasonYear", seasonYear);
+        }
+        if (leagueId != null) {
+            query.setParameter("leagueId", leagueId);
+        }
+        if (completed != null) {
+            query.setParameter("completed", completed);
         }
         query.setFirstResult((int) pageable.getOffset());
         query.setMaxResults(pageable.getPageSize());
         List<Match> matches = query.getResultList();
-        long total = getTotalCount(jpql.toString(), seasonId, homeTeamId, awayTeamId);
+        long total = getTotalCount(jpql.toString(), clubName, dateFrom, dateTo, seasonYear, leagueId, completed);
         return new PageImpl<>(matches, pageable, total);
     }
 
-    private long getTotalCount(String jpql, Long seasonId, Long homeTeamId, Long awayTeamId) {
+    private long getTotalCount(String jpql, String clubName, String dateFrom, String dateTo, Integer seasonYear, Long leagueId, Boolean completed) {
         String countJpql = jpql.replace("SELECT m", "SELECT COUNT(m)");
         Query countQuery = entityManager.createQuery(countJpql);
-        if (seasonId != null) {
-            countQuery.setParameter("seasonId", seasonId);
+        if (clubName != null && !clubName.isEmpty()) {
+            countQuery.setParameter("clubName", "%" + clubName + "%");
         }
-        if (homeTeamId != null) {
-            countQuery.setParameter("homeTeamId", homeTeamId);
+        if (dateFrom != null) {
+            countQuery.setParameter("dateFrom", LocalDate.parse(dateFrom));
         }
-        if (awayTeamId != null) {
-            countQuery.setParameter("awayTeamId", awayTeamId);
+        if (dateTo != null) {
+            countQuery.setParameter("dateTo", LocalDate.parse(dateTo));
+        }
+        if (seasonYear != null) {
+            countQuery.setParameter("seasonYear", seasonYear);
+        }
+        if (leagueId != null) {
+            countQuery.setParameter("leagueId", leagueId);
+        }
+        if (completed != null) {
+            countQuery.setParameter("completed", completed);
         }
         return (long) countQuery.getSingleResult();
     }
