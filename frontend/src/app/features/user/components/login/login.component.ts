@@ -53,7 +53,7 @@ export class LoginComponent {
           horizontalPosition: 'right',
           verticalPosition: 'top',
         });
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['user/dashboard']);
       },
     });
   }

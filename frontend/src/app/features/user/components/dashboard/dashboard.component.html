@@ -1,1 +1,40 @@
-<p>dashboard works!</p>
+<div class="container">
+  @if (userInfo) {
+  <mat-card class="user-card">
+    <mat-card-header>
+      <mat-card-title>
+        Hi,
+        <span class="user-name"
+          >{{ userInfo.firstName }} {{ userInfo.lastName }}!</span
+        >
+      </mat-card-title>
+      <mat-card-subtitle> <h3>Your account info:</h3></mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-list>
+        <mat-list-item>
+          <mat-icon matListItemIcon>email</mat-icon>
+          <div matListItemTitle>Email</div>
+          <div matListItemLine>{{ userInfo.email }}</div>
+        </mat-list-item>
+
+        <mat-divider></mat-divider>
+
+        <mat-list-item>
+          <mat-icon matListItemIcon>badge</mat-icon>
+          <div matListItemTitle>User ID</div>
+          <div matListItemLine>#{{ userInfo.id }}</div>
+        </mat-list-item>
+      </mat-list>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-button color="warn" (click)="openDeleteDialog()">
+        <mat-icon>delete</mat-icon>
+        Delete account
+      </button>
+    </mat-card-actions>
+  </mat-card>
+  }
+</div>

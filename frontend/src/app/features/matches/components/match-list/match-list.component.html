@@ -1,0 +1,153 @@
+<div class="container mt-4">
+  <div class="filter-form">
+    <form [formGroup]="filterForm">
+      <div class="form-field">
+        <mat-form-field class="form-field">
+          <mat-label>Club Name</mat-label>
+          <input
+            matInput
+            formControlName="clubName"
+            placeholder="Enter club name"
+          />
+        </mat-form-field>
+      </div>
+      <div class="form-field">
+        <mat-form-field class="form-field">
+          <mat-label>League</mat-label>
+          <mat-select formControlName="leagueId">
+            @for (league of leagues; track $index) {
+            <mat-option value="{{ league.id }}">{{ league.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-field">
+        <mat-form-field class="form-field">
+          <mat-label>Date From</mat-label>
+          <input
+            matInput
+            [matDatepicker]="dateFromPicker"
+            formControlName="dateFrom"
+            placeholder="Enter start date"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="dateFromPicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #dateFromPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="form-field">
+        <mat-form-field class="form-field">
+          <mat-label>Date To</mat-label>
+          <input
+            matInput
+            [matDatepicker]="dateToPicker"
+            formControlName="dateTo"
+            placeholder="Enter end date"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="dateToPicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #dateToPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="form-field">
+        <mat-form-field class="form-field">
+          <mat-label>Season Year</mat-label>
+          <input
+            matInput
+            formControlName="seasonYear"
+            placeholder="Enter season year"
+            type="number"
+          />
+        </mat-form-field>
+      </div>
+      <div class="radio form-field">
+        <mat-radio-group formControlName="status" class="buttons-group">
+          <mat-radio-button value="completed">completed</mat-radio-button>
+          <mat-radio-button value="scheduled">scheduled</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="clear-filters-button">
+        <button mat-raised-button color="primary" (click)="resetFilters()">
+          Clear Filters
+        </button>
+      </div>
+    </form>
+  </div>
+  <mat-card>
+    <div class="table-wrapper">
+      <div>
+        <table mat-table [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+            <td mat-cell *matCellDef="let match">
+              {{ match.date }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="homeTeam">
+            <th mat-header-cell *matHeaderCellDef>Home Team</th>
+            <td mat-cell *matCellDef="let match">
+              <img [src]="match.homeTeam.logoUrl" alt="logo" width="35" />
+              {{ match.homeTeam.name }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="homeScore">
+            <th mat-header-cell *matHeaderCellDef>Home Score</th>
+            <td mat-cell *matCellDef="let match">
+              {{ match.homeScore }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="awayScore">
+            <th mat-header-cell *matHeaderCellDef>Away Score</th>
+            <td mat-cell *matCellDef="let match">
+              {{ match.awayScore }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="awayTeam">
+            <th mat-header-cell *matHeaderCellDef>Away Team</th>
+            <td mat-cell *matCellDef="let match">
+              <img [src]="match.awayTeam.logoUrl" alt="logo" width="35" />
+              {{ match.awayTeam.name }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let match">
+              <button
+                mat-icon-button
+                (click)="redirectToMatchDetails(match.id)"
+              >
+                <mat-icon>info</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <tr *matNoDataRow>
+            <td class="text-center p-4" colspan="6">
+              <h2>No matches meeting your criteria</h2>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <mat-paginator
+        [length]="totalCount"
+        [pageSizeOptions]="pageSizeOptions"
+        showFirstLastButtons
+        aria-label="Select page"
+      >
+      </mat-paginator>
+    </div>
+  </mat-card>
+</div>

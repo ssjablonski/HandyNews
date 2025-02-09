@@ -8,6 +8,7 @@ import { LoginData } from '../models/loginData.model';
 import { LoginResponse } from '../models/loginResponse.model';
 import { RegisterData } from '../models/registerData.model';
 import { DecodedToken } from '../models/decodedToken.model';
+import { UserInfo } from '../models/userInfo.model';
 
 @Injectable({
   providedIn: 'root',
@@ -49,7 +50,8 @@ export class UserService {
   public logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
-    this.router.navigate(['/main-page']);
+    this.userSubject.next(null);
+    this.router.navigate(['/login']);
   }
 
   public isLoggedIn(): boolean {
@@ -105,5 +107,22 @@ export class UserService {
     if (token) {
       this.userSubject.next(this.getUserId());
     }
+  }
+
+  public getUserData(): Observable<UserInfo> {
+    const userId = this.getUserId();
+    if (!userId) {
+      throw new Error('No user id found');
+    }
+
+    return this.http.get<UserInfo>(`${this.apiUrl}/auth/user/${userId}`);
+  }
+
+  public deleteAccount(userId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/auth/user/${userId}`).pipe(
+      tap(() => {
+        this.logout();
+      })
+    );
   }
 }

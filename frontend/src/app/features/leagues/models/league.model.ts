@@ -4,6 +4,6 @@ export interface League {
   readonly id: number;
   readonly name: string;
   readonly country: string;
-  readonly logo: string;
+  readonly logoUrl: string | null;
   readonly seasons: Season[];
 }

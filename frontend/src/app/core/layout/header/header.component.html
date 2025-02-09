@@ -22,9 +22,9 @@
       >
         Login
       </button>
-      } @if (!user) {
-      <button mat-stroked-button routerLink="/dashboard" class="mx-2">
-        Main page
+      } @if (user) {
+      <button mat-stroked-button routerLink="/user/dashboard" class="mx-2">
+        Account
       </button>
       <button mat-stroked-button class="danger mx-2" (click)="logOut()">
         Log out
@@ -38,7 +38,7 @@
       <button
         mat-stroked-button
         class="navbutton p-4"
-        routerLink="/dashboard/leagues"
+        routerLink="/user/leagues"
         routerLinkActive="active"
       >
         <mat-icon>emoji_events</mat-icon>
@@ -49,7 +49,7 @@
       <button
         mat-stroked-button
         class="navbutton p-4"
-        routerLink="/dashboard/seasons"
+        routerLink="/user/seasons"
         routerLinkActive="active"
       >
         <mat-icon>calendar_month</mat-icon>
@@ -60,10 +60,10 @@
       <button
         mat-stroked-button
         class="navbutton p-4"
-        routerLink="/dashboard/clubs"
+        routerLink="/user/clubs"
         routerLinkActive="active"
       >
-        <mat-icon>calendar_month</mat-icon>
+        <mat-icon>groups</mat-icon>
         Clubs
       </button>
     </div>
@@ -71,7 +71,7 @@
       <button
         mat-stroked-button
         class="navbutton p-4"
-        routerLink="/dashboard"
+        routerLink="/user/matches"
         routerLinkActive="active"
       >
         <mat-icon>sports_handball</mat-icon>

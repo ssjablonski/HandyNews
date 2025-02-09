@@ -4,7 +4,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatButtonModule } from '@angular/material/button';
-import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import {
   FormArray,
@@ -24,7 +23,6 @@ import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-register',
-  providers: [provideNativeDateAdapter()],
   imports: [
     MatCardModule,
     MatFormFieldModule,
@@ -94,7 +92,7 @@ export class RegisterComponent {
             verticalPosition: 'top',
           }
         );
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['user/dashboard']);
       },
     });
   }

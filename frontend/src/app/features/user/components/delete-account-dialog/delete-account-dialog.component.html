@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>Usuwanie konta</h2>
+
+<mat-dialog-content>
+  <p>
+    Czy na pewno chcesz usunąć konto <strong>{{ data.id }}</strong
+    >?
+  </p>
+  <p class="warning">Tej operacji nie można cofnąć!</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Anuluj</button>
+  <button mat-flat-button color="warn" [mat-dialog-close]="'confirm'">
+    Usuń konto
+  </button>
+</mat-dialog-actions>
