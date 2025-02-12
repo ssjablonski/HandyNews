@@ -36,7 +36,6 @@ public class MatchService {
         return matchRepository.findBySeasonId(seasonId);
     }
 
-
     public Match getMatchById(Long id) {
         return matchRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Match not found with id: " + id));
     }
@@ -48,20 +47,40 @@ public class MatchService {
         match.setSeason(season);
         match.setAwayTeam(awayTeam);
         match.setHomeTeam(homeTeam);
+        match.setSeasonId(seasonId);
+        match.setLeagueId(season.getLeague().getId());
         return matchRepository.save(match);
     }
 
     @Transactional
     public void deleteMatch(Long matchId) {
+        if (!matchRepository.existsById(matchId)) {
+            throw new EntityNotFoundException("Match not found with id: " + matchId);
+        }
         matchRepository.deleteById(matchId);
     }
 
     @Transactional
     public Match updateMatch(Long id, Match updatedMatch) {
         Match existingMatch = matchRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Match not found with id: " + id));
-        existingMatch.setDate(updatedMatch.getDate());
-        existingMatch.setHomeScore(updatedMatch.getHomeScore());
-        existingMatch.setAwayScore(updatedMatch.getAwayScore());
+        if (updatedMatch.getDate() != null) {
+            existingMatch.setDate(updatedMatch.getDate());
+        }
+        if (updatedMatch.getHomeScore() != 0) {
+            existingMatch.setHomeScore(updatedMatch.getHomeScore());
+        }
+        if (updatedMatch.getAwayScore() != 0) {
+            existingMatch.setAwayScore(updatedMatch.getAwayScore());
+        }
+        if (updatedMatch.getStatus() != null) {
+            existingMatch.setStatus(updatedMatch.getStatus());
+        }
+        if (updatedMatch.getSeasonId() != null) {
+            existingMatch.setSeasonId(updatedMatch.getSeasonId());
+        }
+        if (updatedMatch.getLeagueId() != null) {
+            existingMatch.setLeagueId(updatedMatch.getLeagueId());
+        }
         return matchRepository.save(existingMatch);
     }
 
@@ -80,7 +99,7 @@ public class MatchService {
             jpql.append(" AND m.season.year = :seasonYear");
         }
         if (leagueId != null) {
-            jpql.append(" AND m.season.league.id = :leagueId");
+            jpql.append(" AND m.leagueId = :leagueId");
         }
         if (completed != null) {
             jpql.append(" AND m.isFinished = :completed");
