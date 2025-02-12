@@ -4,7 +4,7 @@ export interface FilterForm {
   readonly dateFrom: FormControl<string | null>;
   readonly dateTo: FormControl<string | null>;
   readonly seasonYear: FormControl<number | null>;
-  readonly leagueId: FormControl<string | null>;
+  readonly leagueId: FormControl<number | null>;
   readonly status: FormControl<string | null>;
   readonly sortDirection: FormControl<string | null>;
 }

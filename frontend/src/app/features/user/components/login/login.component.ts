@@ -49,11 +49,19 @@ export class LoginComponent {
     this.userService.login(loginFormData as LoginData).subscribe({
       next: () => {
         this.snackBar.open('You have successfully logged in.', 'Close', {
-          duration: 2000,
+          duration: 5000,
           horizontalPosition: 'right',
           verticalPosition: 'top',
         });
         this.router.navigate(['user/dashboard']);
+      },
+      error: (error) => {
+        this.snackBar.open(`${error}. Please try again.`, 'Close', {
+          duration: 5000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+        });
+        this.loginForm.reset();
       },
     });
   }

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { environment } from '../../../../environments/environment';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { LoginData } from '../models/loginData.model';
 import { LoginResponse } from '../models/loginResponse.model';
 import { RegisterData } from '../models/registerData.model';
@@ -26,6 +26,9 @@ export class UserService {
     return this.http
       .post<LoginResponse>(`${this.apiUrl}/auth/authenticate`, loginData)
       .pipe(
+        catchError((err) => {
+          return throwError(() => new Error(err.error));
+        }),
         tap((response) => {
           this.saveToken(response.token);
           this.saveUserId(response.userId);
@@ -38,6 +41,9 @@ export class UserService {
     return this.http
       .post<LoginResponse>(`${this.apiUrl}/auth/register`, registerData)
       .pipe(
+        catchError((err) => {
+          return throwError(() => new Error(err.error));
+        }),
         tap((response) => {
           this.saveToken(response.token);
           this.saveUserId(response.userId);

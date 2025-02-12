@@ -7,4 +7,7 @@ export interface Match {
   readonly awayScore: number;
   readonly homeTeam: Team;
   readonly awayTeam: Team;
+  readonly status: 'SCHEDULED' | 'COMPLETED';
+  readonly leagueId: number;
+  readonly seasonId: number;
 }

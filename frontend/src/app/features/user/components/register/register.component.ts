@@ -94,6 +94,14 @@ export class RegisterComponent {
         );
         this.router.navigate(['user/dashboard']);
       },
+      error: (error) => {
+        this.snackBar.open(`${error}. Please try again.`, 'Close', {
+          duration: 5000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+        });
+        this.registerForm.reset();
+      },
     });
   }
 
