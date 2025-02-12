@@ -56,6 +56,7 @@ public class ClubService {
         Club existingClub = getClubById(id);
         existingClub.setCity(updatedClub.getCity());
         existingClub.setName(updatedClub.getName());
+        existingClub.setLogoUrl(updatedClub.getLogoUrl());
         return clubRepository.save(existingClub);
     }
 

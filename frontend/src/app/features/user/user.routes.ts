@@ -4,6 +4,7 @@ import { authGuard } from '../../core/guards/auth.guard';
 import { MatchFormComponent } from '../matches/components/match-form/match-form.component';
 import { MatchDetailsComponent } from '../matches/components/match-details/match-details.component';
 import { MatchListComponent } from '../matches/components/match-list/match-list.component';
+import { ClubFormComponent } from '../clubs/components/club-form/club-form.component';
 
 export const userRoutes: Routes = [
   {
@@ -29,6 +30,16 @@ export const userRoutes: Routes = [
   {
     path: 'matches/details/:id',
     component: MatchDetailsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'clubs/form',
+    component: ClubFormComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'clubs/form/:id',
+    component: ClubFormComponent,
     canActivate: [authGuard],
   },
 ];
