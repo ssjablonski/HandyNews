@@ -29,11 +29,10 @@ public class MatchController {
     }
 
     @PostMapping("/{seasonId}")
-    public ResponseEntity<Match> createMatch(@PathVariable Long seasonId, @RequestBody Match match, @RequestParam Long homeId, @RequestParam Long awayId) {
-        Match createdMatch = matchService.createMatch(seasonId, match, homeId, awayId);
+    public ResponseEntity<Match> createMatch(@PathVariable Long seasonId, @RequestBody MatchRequest matchRequest) {
+        Match createdMatch = matchService.createMatch(seasonId, matchRequest);
         return ResponseEntity.ok(createdMatch);
     }
-
     @PutMapping("/{id}")
     public ResponseEntity<Match> updateMatch(@PathVariable Long id, @RequestBody Match updatedMatch) {
         Match updated = matchService.updateMatch(id, updatedMatch);

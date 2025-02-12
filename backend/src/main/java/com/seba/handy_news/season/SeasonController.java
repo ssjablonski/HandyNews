@@ -1,5 +1,6 @@
 package com.seba.handy_news.season;
 
+import com.seba.handy_news.club.Club;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +26,16 @@ public class SeasonController {
     public ResponseEntity<Season> getSeasonById(@PathVariable Long seasonId) {
         Season season = seasonService.getSeasonById(seasonId);
         return ResponseEntity.ok(season);
+    }
+
+    @GetMapping("/league/{leagueId}")
+    public ResponseEntity<List<Season>> getAllSeasonsByLeague(@PathVariable Long leagueId) {
+        return ResponseEntity.ok(seasonService.getAllSeasonsByLeague(leagueId));
+    }
+
+    @GetMapping("/{seasonId}/clubs")
+    public ResponseEntity<Set<Club>> getClubsBySeason(@PathVariable Long seasonId) {
+        return ResponseEntity.ok(seasonService.getClubsBySeason(seasonId));
     }
 
     @PostMapping("/{leagueId}")

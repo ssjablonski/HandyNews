@@ -40,15 +40,25 @@ public class MatchService {
         return matchRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Match not found with id: " + id));
     }
 
-    public Match createMatch(Long seasonId, Match match, Long homeTeamId, Long awayTeamId) {
-        Season season = seasonRepository.findById(seasonId).orElseThrow(() -> new EntityNotFoundException("Season not found with id: " + seasonId));
-        Club awayTeam = clubRepository.findById(awayTeamId).orElseThrow(() -> new EntityNotFoundException("Club not found with id: " + awayTeamId));
-        Club homeTeam = clubRepository.findById(homeTeamId).orElseThrow(() -> new EntityNotFoundException("Club not found with id: " + homeTeamId));
+    public Match createMatch(Long seasonId, MatchRequest matchRequest) {
+        Season season = seasonRepository.findById(seasonId)
+                .orElseThrow(() -> new EntityNotFoundException("Season not found with id: " + seasonId));
+        Club homeTeam = clubRepository.findById(matchRequest.getHomeId())
+                .orElseThrow(() -> new EntityNotFoundException("Club not found with id: " + matchRequest.getHomeId()));
+        Club awayTeam = clubRepository.findById(matchRequest.getAwayId())
+                .orElseThrow(() -> new EntityNotFoundException("Club not found with id: " + matchRequest.getAwayId()));
+
+        Match match = new Match();
+        match.setDate(matchRequest.getDate());
+        match.setHomeScore(matchRequest.getHomeScore());
+        match.setAwayScore(matchRequest.getAwayScore());
+        match.setStatus(matchRequest.getStatus());
         match.setSeason(season);
-        match.setAwayTeam(awayTeam);
         match.setHomeTeam(homeTeam);
+        match.setAwayTeam(awayTeam);
         match.setSeasonId(seasonId);
         match.setLeagueId(season.getLeague().getId());
+
         return matchRepository.save(match);
     }
 

@@ -30,6 +30,6 @@ public class League {
     private String logoUrl;
 
     @OneToMany(mappedBy = "league", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("league-seasons") // Dodanie nazwy referencji
+    @JsonManagedReference("league-seasons")
     private List<Season> seasons = new ArrayList<>();
 }

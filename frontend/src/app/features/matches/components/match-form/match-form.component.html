@@ -1,1 +1,121 @@
-<p>match-form works!</p>
+<div class="container my-4">
+  <mat-card>
+    <mat-card-header class="mb-3">
+      <mat-card-title>Create New Match</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="matchForm" (ngSubmit)="onSubmit()">
+        <div>
+          <mat-form-field class="w-100">
+            <mat-label>Date</mat-label>
+            <input matInput formControlName="date" [matDatepicker]="picker" />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            @if (matchForm.get("date")?.hasError("required")) {
+            <mat-error>Date is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="w-100">
+            <mat-label>League</mat-label>
+            <mat-select formControlName="leagueId">
+              @for (league of leagues; track league.id) {
+              <mat-option value="{{ league.id }}">{{ league.name }}</mat-option>
+              }
+            </mat-select>
+            @if (matchForm.get("leagueId")?.hasError("required")) {
+            <mat-error>League is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="w-100">
+            <mat-label>Season</mat-label>
+            <mat-select formControlName="seasonId">
+              @for (season of seasons; track season.id) {
+              <mat-option value="{{ season.id }}">{{ season.name }}</mat-option>
+              }
+            </mat-select>
+            @if (matchForm.get("seasonId")?.hasError("required")) {
+            <mat-error>Season is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="w-100">
+            <mat-label>Home Team</mat-label>
+            <mat-select formControlName="homeId">
+              @for (team of teams; track team.id) {
+              <mat-option value="{{ team.id }}">{{ team.name }}</mat-option>
+              }
+            </mat-select>
+            @if (matchForm.get("homeId")?.hasError("required")) {
+            <mat-error>League is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="w-100">
+            <mat-label>Away Team</mat-label>
+            <mat-select formControlName="awayId">
+              @for (team of teams; track team.id) {
+              <mat-option value="{{ team.id }}">{{ team.name }}</mat-option>
+              }
+            </mat-select>
+            @if (matchForm.get("awayId")?.hasError("required")) {
+            <mat-error>League is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field class="w-100">
+            <mat-label>Home Score</mat-label>
+            <input matInput type="number" formControlName="homeScore" />
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="w-100">
+            <mat-label>Away Score</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="awayScore"
+              required
+            />
+            @if (matchForm.get("awayScore")?.hasError("required")) {
+            <mat-error>Away Score is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field class="w-100">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status" required>
+              <mat-option value="SCHEDULED">Scheduled</mat-option>
+              <mat-option value="COMPLETED">Completed</mat-option>
+            </mat-select>
+            @if (matchForm.get("status")?.hasError("required")) {
+            <mat-error>Date of birth is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="d-grid gap-2">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="matchForm.invalid"
+          >
+            Create Match
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

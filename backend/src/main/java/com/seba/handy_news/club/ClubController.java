@@ -27,9 +27,9 @@ public class ClubController {
         return ResponseEntity.ok(club);
     }
 
-    @PostMapping("/league/{leagueId}")
-    public ResponseEntity<Club> createClub(@RequestBody Club club, @PathVariable Long leagueId) {
-        Club createdClub = clubService.createClub(club, leagueId);
+    @PostMapping("/season/{seasonId}")
+    public ResponseEntity<Club> createClub(@RequestBody Club club, @PathVariable Long seasonId) {
+        Club createdClub = clubService.createClub(club, seasonId);
         return ResponseEntity.ok(createdClub);
     }
 

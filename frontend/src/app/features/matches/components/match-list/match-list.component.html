@@ -70,9 +70,17 @@
           <mat-radio-button value="COMPLETED">Completed</mat-radio-button>
         </mat-radio-group>
       </div>
-      <div class="clear-filters-button">
+      <div class="d-flex gap-1 clear-filters-button">
         <button mat-raised-button color="primary" (click)="resetFilters()">
           Clear Filters
+        </button>
+
+        <button
+          mat-raised-button
+          routerLink="/user/matches/form"
+          routerLinkActive="active"
+        >
+          Add new match
         </button>
       </div>
     </form>
@@ -123,7 +131,8 @@
             <td mat-cell *matCellDef="let match">
               <button
                 mat-icon-button
-                (click)="redirectToMatchDetails(match.id)"
+                [routerLink]="['/user/matches/details', match.id]"
+                routerLinkActive="active"
               >
                 <mat-icon>info</mat-icon>
               </button>
@@ -140,15 +149,16 @@
           </tr>
         </table>
       </div>
-
-      <mat-paginator
-        [length]="totalCount"
-        [pageSizeOptions]="pageSizeOptions"
-        [pageSize]="5"
-        showFirstLastButtons
-        aria-label="Select page"
-      >
-      </mat-paginator>
+      <div class="d-flex justify-content-between">
+        <mat-paginator
+          [length]="totalCount"
+          [pageSizeOptions]="pageSizeOptions"
+          [pageSize]="5"
+          showFirstLastButtons
+          aria-label="Select page"
+        >
+        </mat-paginator>
+      </div>
     </div>
   </mat-card>
 </div>

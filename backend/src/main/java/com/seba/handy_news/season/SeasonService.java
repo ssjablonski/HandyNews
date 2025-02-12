@@ -1,5 +1,6 @@
 package com.seba.handy_news.season;
 
+import com.seba.handy_news.club.Club;
 import com.seba.handy_news.league.League;
 import com.seba.handy_news.league.LeagueRepository;
 import jakarta.persistence.EntityManager;
@@ -11,9 +12,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -33,11 +37,21 @@ public class SeasonService {
     }
 
     public List<Season> getAllSeasonsByLeague(Long leagueId) {
+        if (!leagueRepository.existsById(leagueId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "League not found with id: " + leagueId);
+        }
         return seasonRepository.findByLeagueId(leagueId);
     }
 
+    public Set<Club> getClubsBySeason(Long seasonId) {
+        Season season = seasonRepository.findById(seasonId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Season not found with id: " + seasonId));
+        return season.getClubs();
+    }
+
     public Season createSeason(Long leagueId, Season season) {
-        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new EntityNotFoundException("League not found with id: " + leagueId));
+        League league = leagueRepository.findById(leagueId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "League not found with id: " + leagueId));
         season.setLeague(league);
         return seasonRepository.save(season);
     }

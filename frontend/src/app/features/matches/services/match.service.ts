@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Match } from '../models/match.model';
+import { MatchFormData } from '../models/matchFormData.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,8 +24,8 @@ export class MatchService {
     return this.http.get<Match>(`${this.apiUrl}/${id}`);
   }
 
-  public addMatch(match: Match): Observable<Match> {
-    return this.http.post<Match>(this.apiUrl, match);
+  public addMatch(match: MatchFormData): Observable<Match> {
+    return this.http.post<Match>(`${this.apiUrl}/${match.seasonId}`, match);
   }
 
   public updateMatch(id: number, match: Match): Observable<Match> {

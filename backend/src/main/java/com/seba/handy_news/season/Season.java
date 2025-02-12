@@ -1,8 +1,8 @@
 package com.seba.handy_news.season;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.seba.handy_news.club.Club;
 import com.seba.handy_news.league.League;
 import com.seba.handy_news.match.Match;
 import jakarta.persistence.*;
@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -31,10 +33,18 @@ public class Season {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "league_id", nullable = false)
-    @JsonBackReference("league-seasons") // Zmiana tutaj
+    @JsonBackReference("league-seasons")
     private League league;
 
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("season-matches") // Dodanie nazwy referencji
+    @JsonManagedReference("season-matches")
     private List<Match> matches = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "season_club",
+            joinColumns = @JoinColumn(name = "season_id"),
+            inverseJoinColumns = @JoinColumn(name = "club_id")
+    )
+    private Set<Club> clubs = new HashSet<>();
 }

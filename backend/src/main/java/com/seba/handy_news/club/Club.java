@@ -3,11 +3,15 @@ package com.seba.handy_news.club;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.seba.handy_news.league.League;
+import com.seba.handy_news.season.Season;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,8 +31,8 @@ public class Club {
 
     private String logoUrl;
 
-    @ManyToOne
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "seasons"})
-    private League league;
+    @ManyToMany(mappedBy = "clubs")
+    @JsonBackReference
+    private Set<Season> seasons = new HashSet<>();
 
 }

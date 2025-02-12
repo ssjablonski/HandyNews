@@ -2,6 +2,8 @@ package com.seba.handy_news.club;
 
 import com.seba.handy_news.league.League;
 import com.seba.handy_news.league.LeagueService;
+import com.seba.handy_news.season.Season;
+import com.seba.handy_news.season.SeasonService;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ClubService {
     private final ClubRepository clubRepository;
-    private final LeagueService leagueService;
+    private final SeasonService seasonService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -32,14 +34,20 @@ public class ClubService {
     }
 
     @Transactional
-    public Club createClub(Club club, Long leagueId) {
-        League league = leagueService.getLeagueById(leagueId);
-        club.setLeague(league);
-        return clubRepository.save((club));
+    public Club createClub(Club club, Long seasonId) {
+        Season season = seasonService.getSeasonById(seasonId);
+        club.getSeasons().add(season);
+        season.getClubs().add(club);
+        return clubRepository.save(club);
     }
 
     @Transactional
     public void deleteClub(Long clubId) {
+        Club club = getClubById(clubId);
+        for (Season season : club.getSeasons()) {
+            season.getClubs().remove(club);
+        }
+        club.getSeasons().clear();
         clubRepository.deleteById(clubId);
     }
 
