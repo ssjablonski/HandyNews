@@ -19,6 +19,8 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatchFilters } from '../../models/matchFilters.model';
+import { Season } from '../../../season/models/season.model';
+import { SeasonService } from '../../../season/services/season.service';
 
 @Component({
   selector: 'app-match-list',
@@ -44,6 +46,7 @@ import { MatchFilters } from '../../models/matchFilters.model';
 export class MatchListComponent implements OnInit, AfterViewInit {
   public matches: Match[] = [];
   public leagues: League[] = [];
+  public seasons: Season[] = [];
   public displayedColumns: string[] = [
     'date',
     'homeTeam',
@@ -61,7 +64,10 @@ export class MatchListComponent implements OnInit, AfterViewInit {
     clubName: new FormControl<string | null>(null),
     dateFrom: new FormControl<string | null>(null),
     dateTo: new FormControl<string | null>(null),
-    seasonYear: new FormControl<number | null>(null),
+    seasonId: new FormControl<number | null>({
+      value: null,
+      disabled: true,
+    }),
     leagueId: new FormControl<number | null>(null),
     status: new FormControl<'SCHEDULED' | 'COMPLETED' | null>(null),
     sortDirection: new FormControl<string | null>('asc'),
@@ -73,11 +79,26 @@ export class MatchListComponent implements OnInit, AfterViewInit {
   public constructor(
     private matchService: MatchService,
     private leagueService: LeagueService,
+    private seasonService: SeasonService,
     private router: Router
   ) {}
 
   public ngOnInit(): void {
     this.loadLeagues();
+    const seasonControl = this.filterForm.get('seasonId');
+
+    this.filterForm.get('leagueId')?.valueChanges.subscribe((leagueId) => {
+      if (leagueId) {
+        this.loadSeasons(leagueId);
+
+        seasonControl?.reset();
+        seasonControl?.enable();
+      } else {
+        seasonControl?.disable();
+        seasonControl?.reset();
+        this.seasons = [];
+      }
+    });
     this.updateDataSource();
 
     this.filterForm.valueChanges.subscribe(() => {
@@ -89,32 +110,25 @@ export class MatchListComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    this.dataSource.sortingDataAccessor = (
-      item: Match,
-      property: string
-    ): string | number => {
-      switch (property) {
-        case 'date':
-          return new Date(item.date).getTime();
-        case 'homeTeam':
-          return item.homeTeam.name.toLowerCase();
+    this.dataSource.sortingDataAccessor = (item: Match, property: string) =>
+      this.getSortingValue(item, property);
+  }
 
-        case 'awayTeam':
-          return item.awayTeam.name.toLowerCase();
+  private sortingStrategies = {
+    date: (item: Match) => new Date(item.date).getTime(),
+    homeTeam: (item: Match) => item.homeTeam.name.toLowerCase(),
+    awayTeam: (item: Match) => item.awayTeam.name.toLowerCase(),
+    homeScore: (item: Match) => item.homeScore || 0,
+    awayScore: (item: Match) => item.awayScore || 0,
+    status: (item: Match) => item.status,
+    default: () => '',
+  };
 
-        case 'homeScore':
-          return item.homeScore || 0;
+  private getSortingValue(item: Match, property: string): string | number {
+    const strategy =
+      this.sortingStrategies[property as keyof typeof this.sortingStrategies];
 
-        case 'awayScore':
-          return item.awayScore || 0;
-
-        case 'status':
-          return item.status;
-
-        default:
-          return '';
-      }
-    };
+    return strategy(item) || this.sortingStrategies.default();
   }
 
   public updateDataSource(): void {
@@ -160,10 +174,10 @@ export class MatchListComponent implements OnInit, AfterViewInit {
           return matchDate >= new Date(value as string);
         case 'dateTo':
           return matchDate <= new Date(value as string);
-        case 'seasonYear':
-          return data.seasonId === value;
+        case 'seasonId':
+          return data.seasonId === Number(value);
         case 'leagueId':
-          return data.leagueId === parseInt(value, 10);
+          return data.leagueId === Number(value);
         case 'status':
           return data.status === value;
         default:
@@ -225,6 +239,16 @@ export class MatchListComponent implements OnInit, AfterViewInit {
         this.leagues = data;
       },
       error: (err) => console.log(err),
+    });
+  }
+
+  public loadSeasons(leagueId: number): void {
+    this.seasonService.getAllSeasonsFromLeague(leagueId).subscribe({
+      next: (data) => {
+        console.log(data, 'seasons');
+        this.seasons = data;
+      },
+      error: (err) => console.error(err),
     });
   }
 
