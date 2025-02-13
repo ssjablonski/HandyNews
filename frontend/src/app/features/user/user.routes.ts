@@ -6,6 +6,7 @@ import { MatchDetailsComponent } from '../matches/components/match-details/match
 import { MatchListComponent } from '../matches/components/match-list/match-list.component';
 import { ClubFormComponent } from '../clubs/components/club-form/club-form.component';
 import { SeasonFormComponent } from '../season/components/season-form/season-form.component';
+import { LeagueFormComponent } from '../leagues/components/league-form/league-form.component';
 
 export const userRoutes: Routes = [
   {
@@ -51,6 +52,16 @@ export const userRoutes: Routes = [
   {
     path: 'seasons/form/:id',
     component: SeasonFormComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'leagues/form',
+    component: LeagueFormComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'leagues/form/:id',
+    component: LeagueFormComponent,
     canActivate: [authGuard],
   },
 ];

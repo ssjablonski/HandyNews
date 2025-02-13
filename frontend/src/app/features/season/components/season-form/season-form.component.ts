@@ -113,7 +113,7 @@ export class SeasonFormComponent implements OnInit {
     this.seasonService.addSeason(leagueId, seasonData).subscribe({
       next: () => {
         this.toastSuccess('Season created successfully.');
-        this.router.navigate(['/user/leagues']);
+        this.router.navigate(['/user/matches']);
       },
       error: (error) => this.toastError('create', error),
     });
