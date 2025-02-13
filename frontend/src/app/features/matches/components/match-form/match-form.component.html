@@ -54,7 +54,7 @@
               }
             </mat-select>
             @if (matchForm.get("homeId")?.hasError("required")) {
-            <mat-error>League is required</mat-error>
+            <mat-error>Home Team is required</mat-error>
             }
           </mat-form-field>
         </div>
@@ -67,7 +67,7 @@
               }
             </mat-select>
             @if (matchForm.get("awayId")?.hasError("required")) {
-            <mat-error>League is required</mat-error>
+            <mat-error>Away Team is required</mat-error>
             }
           </mat-form-field>
         </div>
@@ -76,6 +76,9 @@
           <mat-form-field class="w-100">
             <mat-label>Home Score</mat-label>
             <input matInput type="number" formControlName="homeScore" />
+            @if (matchForm.get("homeScore")?.hasError("required")) {
+            <mat-error>Home Score is required</mat-error>
+            }
           </mat-form-field>
         </div>
         <div>
@@ -104,6 +107,21 @@
             <mat-error>Date of birth is required</mat-error>
             }
           </mat-form-field>
+        </div>
+        <div class="form-errors">
+          @if (matchForm.touched && matchForm.hasError('sameTeam') &&
+          matchForm.get('homeId')?.value && matchForm.get('awayId')?.value) {
+          <div class="error-message">
+            <mat-error>Home Team and Away Team cannot be the same</mat-error>
+          </div>
+          } @if (matchForm.touched && matchForm.hasError('noScoreWhenScheduled')
+          && matchForm.get('status')?.value === 'SCHEDULED') {
+          <div class="error-message">
+            <mat-error
+              >Scores must be zero when the match is scheduled</mat-error
+            >
+          </div>
+          }
         </div>
         <div class="d-grid gap-2">
           <button

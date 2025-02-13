@@ -1,0 +1,83 @@
+.scoreboard-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.scoreboard-card {
+  width: 800px;
+  text-align: center;
+}
+
+.scoreboard-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .scoreboard-date {
+    font-size: 1.25rem;
+  }
+
+  .scoreboard-status {
+    font-size: 1.2rem;
+    color: #d32f2f;
+    font-weight: bold;
+  }
+}
+
+.scoreboard-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin: 1rem 0;
+
+  .team-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100px;
+
+    .team-logo {
+      width: 75px;
+      height: auto;
+      margin-bottom: 0.5rem;
+    }
+
+    .team-name {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+  }
+
+  .score-info {
+    font-size: 2.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .dash {
+      font-size: 2rem;
+    }
+  }
+}
+
+.details-section {
+  display: flex;
+  justify-content: center;
+  .match-details {
+    margin: 1rem 2rem;
+
+    p {
+      font-size: 1rem;
+      margin: 0.2rem 0;
+    }
+  }
+}
+
+.scoreboard-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}

@@ -1,14 +1,15 @@
 .container {
   padding: 24px;
-}
-
-.mat-card {
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: 750px;
 }
 
 .mat-form-field {
   margin-bottom: 16px;
+}
+
+.form-errors {
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
 .d-grid {

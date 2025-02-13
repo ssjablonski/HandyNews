@@ -1,1 +1,57 @@
-<p>match-details works!</p>
+<div class="container my-4">
+  @if (match) {
+  <div class="scoreboard-container">
+    <mat-card class="scoreboard-card">
+      <mat-card-header class="scoreboard-header">
+        <div class="scoreboard-date">
+          {{ match.date | date : "dd.MM.yyyy" }}
+        </div>
+      </mat-card-header>
+
+      <mat-card-content class="scoreboard-content">
+        <div class="team-info home-team">
+          <img
+            [src]="match.homeTeam.logoUrl"
+            alt="Home Team Logo"
+            class="team-logo"
+          />
+          <span class="team-name">{{ match.homeTeam.name }}</span>
+        </div>
+
+        <div class="score-info">
+          <span class="score">{{ match.homeScore }}</span>
+          <span class="dash">-</span>
+          <span class="score">{{ match.awayScore }}</span>
+        </div>
+
+        <div class="team-info away-team">
+          <img
+            [src]="match.awayTeam.logoUrl"
+            alt="Away Team Logo"
+            class="team-logo"
+          />
+          <span class="team-name">{{ match.awayTeam.name }}</span>
+        </div>
+      </mat-card-content>
+
+      <mat-card-content class="details-section">
+        <div class="match-details">
+          <p><strong>Status:</strong> {{ match.status }}</p>
+          <p><strong>League:</strong> {{ league?.name }}</p>
+          <p><strong>Season:</strong> {{ season?.name }}</p>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions class="scoreboard-actions">
+        <button mat-raised-button color="primary" (click)="editMatch()">
+          Edytuj
+        </button>
+        <button mat-raised-button color="warn" (click)="openDeleteDialog()">
+          Usuń
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  }
+</div>

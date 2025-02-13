@@ -22,6 +22,8 @@ import { Season } from '../../../season/models/season.model';
 import { SeasonService } from '../../../season/services/season.service';
 import { Team } from '../../../clubs/models/team.model';
 import { Match } from '../../models/match.model';
+import { sameTeamValidator } from '../../../../core/validators/sameTeam.validator';
+import { noScoreWhenScheduled } from '../../../../core/validators/noScoreWhenScheduled.validator';
 
 @Component({
   selector: 'app-match-form',
@@ -54,30 +56,33 @@ export class MatchFormComponent implements OnInit {
     private route: ActivatedRoute
   ) {}
 
-  protected matchForm: FormGroup<MatchForm> = new FormGroup<MatchForm>({
-    date: new FormControl<string>('', {
-      validators: [Validators.required],
-    }),
-    homeScore: new FormControl<number>(0),
-    awayScore: new FormControl<number>(0),
-    status: new FormControl<string>('', {
-      validators: [Validators.required],
-    }),
-    homeId: new FormControl<number | null>(
-      { value: null, disabled: true },
-      { validators: [Validators.required] }
-    ),
-    awayId: new FormControl<number | null>(
-      { value: null, disabled: true },
-      { validators: [Validators.required] }
-    ),
-    leagueId: new FormControl<number | null>(null, {
-      validators: [Validators.required],
-    }),
-    seasonId: new FormControl<number | null>(null, {
-      validators: [Validators.required],
-    }),
-  });
+  protected matchForm: FormGroup<MatchForm> = new FormGroup<MatchForm>(
+    {
+      date: new FormControl<string>('', {
+        validators: [Validators.required],
+      }),
+      homeScore: new FormControl<number>(0),
+      awayScore: new FormControl<number>(0),
+      status: new FormControl<string>('', {
+        validators: [Validators.required],
+      }),
+      homeId: new FormControl<number | null>(
+        { value: null, disabled: true },
+        { validators: [Validators.required] }
+      ),
+      awayId: new FormControl<number | null>(
+        { value: null, disabled: true },
+        { validators: [Validators.required] }
+      ),
+      leagueId: new FormControl<number | null>(null, {
+        validators: [Validators.required],
+      }),
+      seasonId: new FormControl<number | null>(null, {
+        validators: [Validators.required],
+      }),
+    },
+    { validators: [sameTeamValidator(), noScoreWhenScheduled()] }
+  );
 
   public ngOnInit(): void {
     this.checkEditMode();

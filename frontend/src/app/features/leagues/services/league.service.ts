@@ -17,4 +17,8 @@ export class LeagueService {
   public getAllLeagues(): Observable<League[]> {
     return this.http.get<League[]>(`${this.apiUrl}`);
   }
+
+  public getLeagueById(id: number): Observable<League> {
+    return this.http.get<League>(`${this.apiUrl}/${id}`);
+  }
 }
