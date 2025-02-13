@@ -28,7 +28,7 @@ export class MatchService {
     return this.http.post<Match>(`${this.apiUrl}/${match.seasonId}`, match);
   }
 
-  public updateMatch(id: number, match: Match): Observable<Match> {
+  public updateMatch(id: number, match: MatchFormData): Observable<Match> {
     return this.http.put<Match>(`${this.apiUrl}/${id}`, match);
   }
 

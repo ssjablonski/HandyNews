@@ -3,7 +3,7 @@ import { MatchService } from '../../services/match.service';
 import { League } from '../../../leagues/models/league.model';
 import { LeagueService } from '../../../leagues/services/league.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import {
   FormControl,
   FormGroup,
@@ -21,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { Season } from '../../../season/models/season.model';
 import { SeasonService } from '../../../season/services/season.service';
 import { Team } from '../../../clubs/models/team.model';
+import { Match } from '../../models/match.model';
 
 @Component({
   selector: 'app-match-form',
@@ -38,6 +39,8 @@ import { Team } from '../../../clubs/models/team.model';
   styleUrl: './match-form.component.scss',
 })
 export class MatchFormComponent implements OnInit {
+  public isEditMode = false;
+  private matchId?: number;
   public leagues: League[] = [];
   public seasons: Season[] = [];
   public teams: Team[] = [];
@@ -47,7 +50,8 @@ export class MatchFormComponent implements OnInit {
     private leagueService: LeagueService,
     private seasonService: SeasonService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   protected matchForm: FormGroup<MatchForm> = new FormGroup<MatchForm>({
@@ -70,29 +74,35 @@ export class MatchFormComponent implements OnInit {
     leagueId: new FormControl<number | null>(null, {
       validators: [Validators.required],
     }),
-    seasonId: new FormControl<number | null>(
-      { value: null, disabled: true },
-      { validators: [Validators.required] }
-    ),
+    seasonId: new FormControl<number | null>(null, {
+      validators: [Validators.required],
+    }),
   });
 
   public ngOnInit(): void {
+    this.checkEditMode();
     this.loadLeagues();
-    const seasonControl = this.matchForm.get('seasonId');
-    const homeTeamControl = this.matchForm.get('homeId');
-    const awayTeamControl = this.matchForm.get('awayId');
+    this.setupFormListeners();
+  }
 
+  private checkEditMode(): void {
+    this.route.params.subscribe((params) => {
+      if (params['id']) {
+        this.isEditMode = true;
+        this.matchId = +params['id'];
+        this.loadMatchData(this.matchId);
+      }
+    });
+  }
+
+  private setupFormListeners(): void {
     this.matchForm.get('leagueId')?.valueChanges.subscribe((leagueId) => {
       if (leagueId) {
         this.loadSeasons(leagueId);
-        homeTeamControl?.reset();
-        awayTeamControl?.reset();
-        seasonControl?.reset();
-
-        seasonControl?.enable();
+        this.matchForm.get('seasonId')?.reset();
+        this.matchForm.get('seasonId')?.enable();
       } else {
-        seasonControl?.disable();
-        seasonControl?.reset();
+        this.matchForm.get('seasonId')?.disable();
         this.seasons = [];
       }
     });
@@ -100,32 +110,26 @@ export class MatchFormComponent implements OnInit {
     this.matchForm.get('seasonId')?.valueChanges.subscribe((seasonId) => {
       if (seasonId) {
         this.loadClubs(seasonId);
-        homeTeamControl?.enable();
-        awayTeamControl?.enable();
+        this.matchForm.get('homeId')?.enable();
+        this.matchForm.get('awayId')?.enable();
       } else {
-        homeTeamControl?.disable();
-        awayTeamControl?.disable();
-        homeTeamControl?.reset();
-        awayTeamControl?.reset();
+        this.matchForm.get('homeId')?.disable();
+        this.matchForm.get('awayId')?.disable();
         this.teams = [];
       }
     });
   }
 
-  public loadLeagues(): void {
+  private loadLeagues(): void {
     this.leagueService.getAllLeagues().subscribe({
-      next: (data) => {
-        console.log(data, 'leagues');
-        this.leagues = data;
-      },
-      error: (err) => console.error(err),
+      next: (data) => (this.leagues = data),
+      error: (err) => this.toastError('load leagues', err),
     });
   }
 
   public loadSeasons(leagueId: number): void {
     this.seasonService.getAllSeasonsFromLeague(leagueId).subscribe({
       next: (data) => {
-        console.log(data, 'seasons');
         this.seasons = data;
       },
       error: (err) => console.error(err),
@@ -135,38 +139,106 @@ export class MatchFormComponent implements OnInit {
   public loadClubs(seasonId: number): void {
     this.seasonService.getAllClubsFromSeason(seasonId).subscribe({
       next: (data) => {
-        console.log(data, 'teams');
         this.teams = data;
       },
       error: (err) => console.error(err),
     });
   }
 
+  private loadMatchData(matchId: number): void {
+    this.matchService.getMatchById(matchId).subscribe({
+      next: (match) => this.patchFormValues(match),
+      error: (err) => this.toastError('load', err),
+    });
+  }
+
+  private patchFormValues(match: Match): void {
+    this.matchForm.patchValue({
+      date: match.date.toString(),
+      leagueId: match.leagueId,
+      seasonId: match.seasonId,
+      homeId: match.homeTeam.id,
+      awayId: match.awayTeam.id,
+      homeScore: match.homeScore,
+      awayScore: match.awayScore,
+      status: match.status,
+    });
+
+    this.handleLeagueId(match.leagueId);
+    this.handleSeasonId(match.seasonId);
+  }
+
+  private handleLeagueId(leagueId: number | null): void {
+    if (leagueId) {
+      this.loadSeasons(leagueId);
+      this.matchForm.get('leagueId')?.disable();
+    }
+  }
+
+  private handleSeasonId(seasonId: number | null): void {
+    if (seasonId) {
+      this.loadClubs(seasonId);
+      this.matchForm.get('seasonId')?.disable();
+      this.matchForm.get('homeId')?.enable();
+      this.matchForm.get('awayId')?.enable();
+    }
+  }
+
   public onSubmit(): void {
     if (this.matchForm.valid) {
-      console.log(this.matchForm.value);
-      const matchFormData = this.matchForm.value;
-      this.matchService.addMatch(matchFormData as MatchFormData).subscribe({
-        next: () => {
-          this.snackBar.open('Match created successfully.', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
-          });
-          this.router.navigate(['/user/matches']);
-        },
-        error: (error) => {
-          this.snackBar.open(
-            `Failed to create match: ${error.message}`,
-            'Close',
-            {
-              duration: 5000,
-              horizontalPosition: 'right',
-              verticalPosition: 'top',
-            }
-          );
-        },
-      });
+      const formValue = this.matchForm.getRawValue();
+      const matchData: MatchFormData = {
+        date: formValue.date!,
+        homeScore: formValue.homeScore!,
+        awayScore: formValue.awayScore!,
+        status: formValue.status!,
+        homeId: formValue.homeId!,
+        awayId: formValue.awayId!,
+        leagueId: formValue.leagueId!,
+        seasonId: formValue.seasonId!,
+      };
+
+      if (this.isEditMode && this.matchId) {
+        this.updateMatch(this.matchId, matchData);
+      } else {
+        this.createMatch(matchData);
+      }
     }
+  }
+
+  private createMatch(matchData: MatchFormData): void {
+    this.matchService.addMatch(matchData).subscribe({
+      next: () => {
+        this.toastSuccess('Match created successfully.');
+        this.router.navigate(['/user/matches']);
+      },
+      error: (error) => this.toastError('create', error),
+    });
+  }
+
+  private updateMatch(matchId: number, matchData: MatchFormData): void {
+    this.matchService.updateMatch(matchId, matchData).subscribe({
+      next: () => {
+        this.toastSuccess('Match updated successfully.');
+        this.router.navigate(['/user/matches']);
+      },
+      error: (error) => this.toastError('update', error),
+    });
+  }
+
+  public toastSuccess(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+    });
+  }
+
+  public toastError(action: string, error: Error): void {
+    this.snackBar.open(`Failed to ${action}: ${error.message}`, 'Close', {
+      duration: 5000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+    });
   }
 }
