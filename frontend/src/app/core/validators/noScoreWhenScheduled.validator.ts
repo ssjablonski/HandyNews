@@ -13,7 +13,6 @@ export function noScoreWhenScheduled(): ValidatorFn {
     const homeScore = homeScoreControl.value as number;
     const awayScore = awayScoreControl.value as number;
     const status = statusControl.value as string;
-    console.log('noScoreWhenScheduled:', { homeScore, awayScore, status });
 
     if (status === 'SCHEDULED' && (homeScore !== 0 || awayScore !== 0)) {
       return { noScoreWhenScheduled: true };

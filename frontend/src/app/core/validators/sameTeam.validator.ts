@@ -11,7 +11,6 @@ export function sameTeamValidator(): ValidatorFn {
 
     const homeId = homeControl.value as number;
     const awayId = awayControl.value as number;
-    console.log('sameTeamValidator:', { homeId, awayId });
 
     return homeId === awayId ? { sameTeam: true } : null;
   };

@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Season } from '../models/season.model';
 import { HttpClient } from '@angular/common/http';
 import { Team } from '../../clubs/models/team.model';
+import { SeasonFormData } from '../models/seasonFormData.model';
 
 @Injectable({
   providedIn: 'root',
@@ -33,5 +34,19 @@ export class SeasonService {
     const test = this.http.get<Team[]>(`${this.apiUrl}/${seasonId}/clubs`);
 
     return test;
+  }
+
+  public addSeason(
+    leagueId: number,
+    season: SeasonFormData
+  ): Observable<Season> {
+    return this.http.post<Season>(`${this.apiUrl}/${leagueId}`, season);
+  }
+
+  public updateSeason(
+    seasonId: number,
+    season: SeasonFormData
+  ): Observable<Season> {
+    return this.http.put<Season>(`${this.apiUrl}/${seasonId}`, season);
   }
 }
