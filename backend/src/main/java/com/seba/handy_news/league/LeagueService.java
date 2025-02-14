@@ -39,6 +39,7 @@ public class LeagueService {
         League existingLeague = getLeagueById(id);
         existingLeague.setCountry(league.getCountry());
         existingLeague.setName(league.getName());
+        existingLeague.setLogoUrl(league.getLogoUrl());
         return leagueRepository.save(existingLeague);
     }
 

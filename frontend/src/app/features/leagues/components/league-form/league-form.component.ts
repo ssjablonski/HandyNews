@@ -96,7 +96,7 @@ export class LeagueFormComponent implements OnInit {
     this.leagueService.addLeague(leagueData).subscribe({
       next: () => {
         this.toastSuccess('League created successfully.');
-        this.router.navigate(['/user/matches']);
+        this.router.navigate(['/user/leagues']);
       },
       error: (error) => this.toastError('update', error),
     });
@@ -106,7 +106,7 @@ export class LeagueFormComponent implements OnInit {
     this.leagueService.updateLeague(id, leagueData).subscribe({
       next: () => {
         this.toastSuccess('League updated successfully.');
-        this.router.navigate(['/user/matches']);
+        this.router.navigate(['/user/leagues']);
       },
       error: (error) => this.toastError('update', error),
     });

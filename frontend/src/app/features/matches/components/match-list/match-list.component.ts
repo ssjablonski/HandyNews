@@ -257,7 +257,6 @@ export class MatchListComponent implements OnInit, AfterViewInit {
   }
 
   public redirectToForm(): void {
-    console.log('lala');
     this.router.navigate(['/matches/form']);
   }
 }

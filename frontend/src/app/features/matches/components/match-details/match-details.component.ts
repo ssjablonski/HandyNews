@@ -7,12 +7,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { DeleteMatchDialogComponent } from '../delete-match-dialog/delete-match-dialog.component';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Season } from '../../../season/models/season.model';
 import { League } from '../../../leagues/models/league.model';
 import { SeasonService } from '../../../season/services/season.service';
 import { forkJoin, switchMap, tap } from 'rxjs';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-match-details',
@@ -82,8 +82,12 @@ export class MatchDetailsComponent implements OnInit {
   }
 
   public openDeleteDialog(): void {
-    const dialogRef = this.dialog.open(DeleteMatchDialogComponent, {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '600px',
+      data: {
+        title: 'Delete Match',
+        message: 'Are you sure you want to delete this match?',
+      },
     });
 
     dialogRef.afterClosed().subscribe((result) => {

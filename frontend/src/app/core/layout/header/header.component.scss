@@ -4,14 +4,40 @@
 
 .navbutton {
   border-radius: 0;
-  border: none; /* Domyślnie bez obramowania */
+  border: none;
   background: transparent;
 }
 
 .navbutton.active {
-  border-bottom: 3px solid #a170f6; /* Nadpisujemy tylko border-bottom */
+  border-bottom: 3px solid #a170f6;
 }
 
 .danger {
   background-color: #bb2d3b;
+}
+
+@media (max-width: 550px) {
+  .nav-bar {
+    align-items: flex-start;
+  }
+
+  .example-button-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .navbutton {
+    width: 100%;
+    text-align: center;
+  }
+
+  .navbutton span {
+    display: none;
+  }
+
+  .navbutton mat-icon {
+    margin-right: 0;
+  }
 }

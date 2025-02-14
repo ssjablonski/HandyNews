@@ -33,4 +33,8 @@ export class LeagueService {
   ): Observable<League> {
     return this.http.put<League>(`${this.apiUrl}/${id}`, leagueData);
   }
+
+  public deleteLeague(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }
