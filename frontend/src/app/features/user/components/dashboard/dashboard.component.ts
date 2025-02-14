@@ -1,3 +1,4 @@
+import { ConfirmDialogComponent } from './../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { UserInfo } from '../../models/userInfo.model';
@@ -8,7 +9,6 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { DeleteAccountDialogComponent } from '../delete-account-dialog/delete-account-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -25,6 +25,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class DashboardComponent implements OnInit {
   public userInfo: UserInfo | null = null;
+
   public constructor(
     private userService: UserService,
     private dialog: MatDialog,
@@ -44,19 +45,17 @@ export class DashboardComponent implements OnInit {
   }
 
   public openDeleteDialog(): void {
-    const dialogRef = this.dialog.open(DeleteAccountDialogComponent, {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '600px',
-      data: { email: this.userInfo?.id },
+      data: {
+        title: 'Delete Account',
+        message: 'Are you sure you want to delete your account?',
+      },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 'confirm' && this.userInfo) {
         this.deleteAccount(this.userInfo.id);
-        this.snackBar.open('Account deleted successfully.', 'Close', {
-          duration: 2000,
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
-        });
       }
     });
   }
@@ -64,6 +63,11 @@ export class DashboardComponent implements OnInit {
   public deleteAccount(userId: number): void {
     this.userService.deleteAccount(userId).subscribe({
       next: () => {
+        this.snackBar.open('Account deleted successfully.', 'Close', {
+          duration: 2000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+        });
         this.router.navigate(['user/login']);
       },
       error: (error) => {

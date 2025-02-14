@@ -1,6 +1,7 @@
 package com.seba.handy_news.auth;
 
 import com.seba.handy_news.config.JwtService;
+import com.seba.handy_news.user.Address;
 import com.seba.handy_news.user.Role;
 import com.seba.handy_news.user.User;
 import com.seba.handy_news.user.UserRepository;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -29,12 +31,21 @@ public class AuthenticationService {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
         }
+        var address = Address.builder()
+                .city(request.getAddress().getCity())
+                .zipcode(request.getAddress().getZipcode())
+                .houseNumber(request.getAddress().getHouseNumber())
+                .street(request.getAddress().getStreet())
+                .build();
         var user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .dateOfBirth(LocalDate.parse(request.getDateOfBirth()))
+                .phoneNumber(request.getPhoneNumber())
                 .role(Role.USER)
+                .address(address)
                 .build();
         userRepository.save(user);
         var token = jwtService.generateToken(user);

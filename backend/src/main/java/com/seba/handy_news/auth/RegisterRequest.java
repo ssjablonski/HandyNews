@@ -1,5 +1,6 @@
 package com.seba.handy_news.auth;
 
+import com.seba.handy_news.user.Address;
 import com.seba.handy_news.user.Role;
 import lombok.*;
 
@@ -13,5 +14,8 @@ public class RegisterRequest {
     private String lastName;
     private String email;
     private String password;
-    private String role;
+    private String dateOfBirth;
+    private String phoneNumber;
+    private Address address;
+    private Role role;
 }

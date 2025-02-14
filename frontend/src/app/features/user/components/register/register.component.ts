@@ -6,7 +6,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import {
-  FormArray,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
@@ -20,6 +19,7 @@ import { validPhoneNumber } from '../../../../core/validators/validPhoneNumber.v
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RegisterData } from '../../models/registerData.model';
 import { UserService } from '../../services/user.service';
+import { completeAddressValidator } from '../../../../core/validators/completeAddressValidator.validator';
 
 @Component({
   selector: 'app-register',
@@ -64,24 +64,41 @@ export class RegisterComponent {
       phoneNumber: new FormControl<string>('', {
         validators: [Validators.required, validPhoneNumber()],
       }),
-      address: new FormArray<FormGroup<UserAddressForm>>([
-        new FormGroup<UserAddressForm>(
-          {
-            city: new FormControl<string | null>(null, {}),
-            zipcode: new FormControl<string | null>(null, {}),
-            houseNumber: new FormControl<string | null>(null, {}),
-            street: new FormControl<string | null>(null, {}),
-          },
-          {
-            validators: [], // TODO - custom validator czy sa wszystkie czy nie
-          }
-        ),
-      ]),
+      address: new FormGroup<UserAddressForm>(
+        {
+          city: new FormControl<string | null>(null, {}),
+          zipcode: new FormControl<string | null>(null, {}),
+          houseNumber: new FormControl<string | null>(null, {}),
+          street: new FormControl<string | null>(null, {}),
+        },
+        {
+          validators: [completeAddressValidator()],
+        }
+      ),
     });
 
   protected onSubmit(): void {
-    const registerFormData = this.registerForm.value;
-    this.userService.register(registerFormData as RegisterData).subscribe({
+    const registerFormData = this.registerForm.getRawValue();
+
+    const formattedRegisterData: RegisterData = {
+      email: registerFormData.email!,
+      password: registerFormData.password!,
+      firstName: registerFormData.firstName!,
+      lastName: registerFormData.lastName!,
+      dateOfBirth: new Date(registerFormData.dateOfBirth!)
+        .toISOString()
+        .split('T')[0],
+      phoneNumber: registerFormData.phoneNumber!,
+      address: {
+        city: registerFormData.address.city!,
+        zipcode: registerFormData.address.zipcode!,
+        houseNumber: registerFormData.address.houseNumber!,
+        street: registerFormData.address.street!,
+      },
+    };
+
+    console.log(registerFormData);
+    this.userService.register(formattedRegisterData as RegisterData).subscribe({
       next: () => {
         this.snackBar.open(
           'Your account has been successfully created.',
@@ -105,9 +122,9 @@ export class RegisterComponent {
     });
   }
 
-  protected get address(): FormArray<FormGroup<UserAddressForm>> {
-    return this.registerForm.controls.address as FormArray<
-      FormGroup<UserAddressForm>
-    >;
-  }
+  // protected get address(): FormArray<FormGroup<UserAddressForm>> {
+  //   return this.registerForm.controls.address as FormArray<
+  //     FormGroup<UserAddressForm>
+  //   >;
+  // }
 }

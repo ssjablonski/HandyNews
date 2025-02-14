@@ -26,6 +26,41 @@
           <div matListItemTitle>User ID</div>
           <div matListItemLine>#{{ userInfo.id }}</div>
         </mat-list-item>
+
+        <mat-divider></mat-divider>
+
+        <mat-list-item>
+          <mat-icon matListItemIcon>cake</mat-icon>
+          <div matListItemTitle>Date of Birth</div>
+          <div matListItemLine>{{ userInfo.dateOfBirth }}</div>
+        </mat-list-item>
+
+        <mat-divider></mat-divider>
+
+        <mat-list-item>
+          <mat-icon matListItemIcon>phone</mat-icon>
+          <div matListItemTitle>Phone Number</div>
+          <div matListItemLine>{{ userInfo.phoneNumber }}</div>
+        </mat-list-item>
+
+        <mat-divider></mat-divider>
+
+        <mat-list-item>
+          <mat-icon matListItemIcon>security</mat-icon>
+          <div matListItemTitle>Role</div>
+          <div matListItemLine>{{ userInfo.role }}</div>
+        </mat-list-item>
+
+        <mat-divider></mat-divider>
+
+        <mat-list-item>
+          <mat-icon matListItemIcon>home</mat-icon>
+          <div matListItemTitle>Address</div>
+          <div matListItemLine>
+            {{ userInfo.address.street }}, {{ userInfo.address.houseNumber }},
+            {{ userInfo.address.city }}, {{ userInfo.address.zipcode }}
+          </div>
+        </mat-list-item>
       </mat-list>
     </mat-card-content>
 

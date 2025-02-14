@@ -7,5 +7,5 @@ export interface RegisterData {
   readonly password: string;
   readonly dateOfBirth: string;
   readonly phoneNumber: string;
-  readonly address: UserAddressData[];
+  readonly address: UserAddressData;
 }
