@@ -49,4 +49,8 @@ export class SeasonService {
   ): Observable<Season> {
     return this.http.put<Season>(`${this.apiUrl}/${seasonId}`, season);
   }
+
+  public deleteSeason(seasonId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${seasonId}`);
+  }
 }

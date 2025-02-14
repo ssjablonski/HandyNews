@@ -49,6 +49,7 @@ public class SeasonService {
         return season.getClubs();
     }
 
+    @Transactional
     public Season createSeason(Long leagueId, Season season) {
         League league = leagueRepository.findById(leagueId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "League not found with id: " + leagueId));

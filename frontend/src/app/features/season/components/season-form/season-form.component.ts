@@ -82,7 +82,7 @@ export class SeasonFormComponent implements OnInit {
     this.seasonService.getSeasonById(id).subscribe({
       next: (season) => {
         this.seasonForm.patchValue({
-          leagueId: season.league.id,
+          leagueId: season.leagueDto.id,
           name: season.name,
           year: season.year,
         });
@@ -113,7 +113,7 @@ export class SeasonFormComponent implements OnInit {
     this.seasonService.addSeason(leagueId, seasonData).subscribe({
       next: () => {
         this.toastSuccess('Season created successfully.');
-        this.router.navigate(['/user/matches']);
+        this.router.navigate(['/user/seasons']);
       },
       error: (error) => this.toastError('create', error),
     });
@@ -123,7 +123,7 @@ export class SeasonFormComponent implements OnInit {
     this.seasonService.updateSeason(seasonId, seasonData).subscribe({
       next: () => {
         this.toastSuccess('Match updated successfully.');
-        this.router.navigate(['/user/matches']);
+        this.router.navigate(['/user/seasons']);
       },
       error: (error) => this.toastError('update', error),
     });
