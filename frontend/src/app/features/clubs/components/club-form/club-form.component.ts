@@ -159,7 +159,7 @@ export class ClubFormComponent implements OnInit {
     this.clubService.addClub(seasonId, clubData).subscribe({
       next: () => {
         this.toastSuccess('Club created successfully.');
-        this.router.navigate(['/user/matches']);
+        this.router.navigate(['/user/clubs']);
       },
       error: (error) => this.toastError('create club', error),
     });
@@ -169,7 +169,7 @@ export class ClubFormComponent implements OnInit {
     this.clubService.updateClub(clubId, clubData).subscribe({
       next: () => {
         this.toastSuccess('Club updated successfully.');
-        this.router.navigate(['/user/matches']);
+        this.router.navigate(['/user/clubs']);
       },
       error: (error) => this.toastError('update club', error),
     });

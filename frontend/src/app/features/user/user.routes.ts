@@ -8,6 +8,7 @@ import { ClubFormComponent } from '../clubs/components/club-form/club-form.compo
 import { SeasonFormComponent } from '../season/components/season-form/season-form.component';
 import { LeagueFormComponent } from '../leagues/components/league-form/league-form.component';
 import { LeagueListComponent } from '../leagues/components/league-list/league-list.component';
+import { ClubListComponent } from '../clubs/components/club-list/club-list.component';
 
 export const userRoutes: Routes = [
   {
@@ -33,6 +34,11 @@ export const userRoutes: Routes = [
   {
     path: 'matches/details/:id',
     component: MatchDetailsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'clubs',
+    component: ClubListComponent,
     canActivate: [authGuard],
   },
   {

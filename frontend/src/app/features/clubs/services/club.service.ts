@@ -31,4 +31,8 @@ export class ClubService {
   public updateClub(id: number, club: ClubFormData): Observable<Club> {
     return this.http.put<Club>(`${this.apiUrl}/${id}`, club);
   }
+
+  public deleteClub(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }
