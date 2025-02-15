@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Season } from '../models/season.model';
 import { HttpClient } from '@angular/common/http';
 import { Team } from '../../clubs/models/team.model';
@@ -11,8 +11,6 @@ import { SeasonFormData } from '../models/seasonFormData.model';
 })
 export class SeasonService {
   private apiUrl = `${environment.apiUrl}/season`;
-  private seasonSubject = new BehaviorSubject<Season[]>([]);
-  public seasons = this.seasonSubject.asObservable();
 
   public constructor(private http: HttpClient) {}
 

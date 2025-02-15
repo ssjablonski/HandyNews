@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { League } from '../models/league.model';
 import { HttpClient } from '@angular/common/http';
 import { LeagueFormData } from '../models/leagueFormData.model';
@@ -10,8 +10,6 @@ import { LeagueFormData } from '../models/leagueFormData.model';
 })
 export class LeagueService {
   private apiUrl = `${environment.apiUrl}/league`;
-  private leagueSubject = new BehaviorSubject<League[]>([]);
-  public leagues = this.leagueSubject.asObservable();
 
   public constructor(private http: HttpClient) {}
 

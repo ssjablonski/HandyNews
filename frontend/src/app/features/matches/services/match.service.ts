@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Match } from '../models/match.model';
 import { MatchFormData } from '../models/matchFormData.model';
 
@@ -11,8 +11,6 @@ import { MatchFormData } from '../models/matchFormData.model';
 })
 export class MatchService {
   private apiUrl = `${environment.apiUrl}/match`;
-  // private matchesSubject = new BehaviorSubject<Match[]>([]);
-  // public matches$ = this.matchesSubject.asObservable();
 
   public constructor(private http: HttpClient, private router: Router) {}
 

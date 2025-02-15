@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Club } from '../models/club.model';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Router } from '@angular/router';
 import { ClubFormData } from '../models/clubFormData.model';
@@ -11,8 +11,6 @@ import { ClubFormData } from '../models/clubFormData.model';
 })
 export class ClubService {
   private apiUrl = `${environment.apiUrl}/club`;
-  private clubSubject = new BehaviorSubject<Club[]>([]);
-  public clubs$ = this.clubSubject.asObservable();
 
   public constructor(private http: HttpClient, private router: Router) {}
 
