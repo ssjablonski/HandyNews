@@ -11,8 +11,8 @@ import { MatchFormData } from '../models/matchFormData.model';
 })
 export class MatchService {
   private apiUrl = `${environment.apiUrl}/match`;
-  private matchesSubject = new BehaviorSubject<Match[]>([]);
-  public matches$ = this.matchesSubject.asObservable();
+  // private matchesSubject = new BehaviorSubject<Match[]>([]);
+  // public matches$ = this.matchesSubject.asObservable();
 
   public constructor(private http: HttpClient, private router: Router) {}
 

@@ -122,6 +122,11 @@ export class RegisterComponent {
     });
   }
 
+  public clearAddress(): void {
+    console.log('clear');
+    this.registerForm.get('address')?.reset();
+  }
+
   // protected get address(): FormArray<FormGroup<UserAddressForm>> {
   //   return this.registerForm.controls.address as FormArray<
   //     FormGroup<UserAddressForm>

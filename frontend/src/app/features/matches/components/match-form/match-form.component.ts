@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatchService } from '../../services/match.service';
 import { League } from '../../../leagues/models/league.model';
 import { LeagueService } from '../../../leagues/services/league.service';
@@ -24,6 +24,7 @@ import { Team } from '../../../clubs/models/team.model';
 import { Match } from '../../models/match.model';
 import { sameTeamValidator } from '../../../../core/validators/sameTeam.validator';
 import { noScoreWhenScheduled } from '../../../../core/validators/noScoreWhenScheduled.validator';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-match-form',
@@ -40,12 +41,13 @@ import { noScoreWhenScheduled } from '../../../../core/validators/noScoreWhenSch
   templateUrl: './match-form.component.html',
   styleUrl: './match-form.component.scss',
 })
-export class MatchFormComponent implements OnInit {
+export class MatchFormComponent implements OnInit, OnDestroy {
   public isEditMode = false;
   private matchId?: number;
   public leagues: League[] = [];
   public seasons: Season[] = [];
   public teams: Team[] = [];
+  private subs: Subscription[] = [];
 
   public constructor(
     private matchService: MatchService,
@@ -90,6 +92,10 @@ export class MatchFormComponent implements OnInit {
     this.setupFormListeners();
   }
 
+  public ngOnDestroy(): void {
+    this.subs.forEach((sub) => sub.unsubscribe());
+  }
+
   private checkEditMode(): void {
     this.route.params.subscribe((params) => {
       if (params['id']) {
@@ -101,28 +107,38 @@ export class MatchFormComponent implements OnInit {
   }
 
   private setupFormListeners(): void {
-    this.matchForm.get('leagueId')?.valueChanges.subscribe((leagueId) => {
-      if (leagueId) {
-        this.loadSeasons(leagueId);
-        this.matchForm.get('seasonId')?.reset();
-        this.matchForm.get('seasonId')?.enable();
-      } else {
-        this.matchForm.get('seasonId')?.disable();
-        this.seasons = [];
-      }
-    });
+    const leagueSub = this.matchForm
+      .get('leagueId')
+      ?.valueChanges.subscribe((leagueId) => {
+        if (leagueId) {
+          this.loadSeasons(leagueId);
+          this.matchForm.get('seasonId')?.reset();
+          this.matchForm.get('seasonId')?.enable();
+        } else {
+          this.matchForm.get('seasonId')?.disable();
+          this.seasons = [];
+        }
+      });
 
-    this.matchForm.get('seasonId')?.valueChanges.subscribe((seasonId) => {
-      if (seasonId) {
-        this.loadClubs(seasonId);
-        this.matchForm.get('homeId')?.enable();
-        this.matchForm.get('awayId')?.enable();
-      } else {
-        this.matchForm.get('homeId')?.disable();
-        this.matchForm.get('awayId')?.disable();
-        this.teams = [];
-      }
-    });
+    const seasonSub = this.matchForm
+      .get('seasonId')
+      ?.valueChanges.subscribe((seasonId) => {
+        if (seasonId) {
+          this.loadClubs(seasonId);
+          this.matchForm.get('homeId')?.enable();
+          this.matchForm.get('awayId')?.enable();
+        } else {
+          this.matchForm.get('homeId')?.disable();
+          this.matchForm.get('awayId')?.disable();
+          this.teams = [];
+        }
+      });
+    if (leagueSub) {
+      this.subs.push(leagueSub);
+    }
+    if (seasonSub) {
+      this.subs.push(seasonSub);
+    }
   }
 
   private loadLeagues(): void {
