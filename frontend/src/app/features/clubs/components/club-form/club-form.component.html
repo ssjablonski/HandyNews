@@ -1,0 +1,84 @@
+<div class="container my-4">
+  <mat-card>
+    <mat-card-header class="mb-3">
+      @if (isEditMode) {
+      <mat-card-title>Update Club</mat-card-title>
+      } @else {
+      <mat-card-title>Create New Club</mat-card-title>
+      }
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="clubForm" (ngSubmit)="onSubmit()">
+        @if (!isEditMode) {
+        <div>
+          <mat-form-field class="w-100">
+            <mat-label>League</mat-label>
+            <mat-select formControlName="leagueId">
+              @for (league of leagues; track league.id) {
+              <mat-option value="{{ league.id }}">{{ league.name }}</mat-option>
+              }
+            </mat-select>
+            @if (clubForm.get("leagueId")?.hasError("required")) {
+            <mat-error>League is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="w-100">
+            <mat-label>Season</mat-label>
+            <mat-select formControlName="seasonId">
+              @for (season of seasons; track season.id) {
+              <mat-option value="{{ season.id }}">{{ season.name }}</mat-option>
+              }
+            </mat-select>
+            @if (clubForm.get("seasonId")?.hasError("required")) {
+            <mat-error>Season is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        }
+
+        <div>
+          <mat-form-field class="w-100">
+            <mat-label>Club name</mat-label>
+            <input matInput type="text" formControlName="name" required />
+            @if (clubForm.get("name")?.hasError("required")) {
+            <mat-error>Club name is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field class="w-100">
+            <mat-label>City</mat-label>
+            <input matInput type="text" formControlName="city" required />
+            @if (clubForm.get("city")?.hasError("required")) {
+            <mat-error>City is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field class="w-100">
+            <mat-label>Logo URL</mat-label>
+            <input matInput type="url" formControlName="logoUrl" required />
+            @if (clubForm.get("logoUrl")?.hasError("required")) {
+            <mat-error>Logo URL is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="clubForm.invalid"
+          >
+            @if (isEditMode){ Update Match } @else { Create Match }
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

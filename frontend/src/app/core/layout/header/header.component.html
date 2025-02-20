@@ -1,0 +1,84 @@
+<nav>
+  <mat-toolbar
+    color="primary"
+    class="d-flex justify-content-between align-items-center nav-bar"
+  >
+    <span>Handy News</span>
+    <div>
+      @if (!user) {
+      <button
+        mat-stroked-button
+        routerLink="/register"
+        routerLinkActive="active"
+        class="mx-2"
+      >
+        Register
+      </button>
+      <button
+        mat-stroked-button
+        routerLink="/login"
+        routerLinkActive="active"
+        class="mx-2"
+      >
+        Login
+      </button>
+      } @if (user) {
+      <button mat-stroked-button routerLink="/user/dashboard" class="mx-2">
+        Account
+      </button>
+      <button mat-stroked-button class="danger mx-2" (click)="logOut()">
+        Log out
+      </button>
+      }
+    </div>
+  </mat-toolbar>
+  @if (user) {
+  <mat-toolbar class="d-flex justify-content-center align-items-center nav-bar">
+    <div class="example-button-container">
+      <button
+        mat-stroked-button
+        class="navbutton p-4"
+        routerLink="/user/leagues"
+        routerLinkActive="active"
+      >
+        <mat-icon>emoji_events</mat-icon>
+        <span>Leagues</span>
+      </button>
+    </div>
+    <div class="example-button-container">
+      <button
+        mat-stroked-button
+        class="navbutton p-4"
+        routerLink="/user/seasons"
+        routerLinkActive="active"
+      >
+        <mat-icon>calendar_month</mat-icon>
+        <span>Seasons</span>
+      </button>
+    </div>
+    <div class="example-button-container">
+      <button
+        mat-stroked-button
+        class="navbutton p-4"
+        routerLink="/user/clubs"
+        routerLinkActive="active"
+      >
+        <mat-icon>groups</mat-icon>
+        <span>Clubs</span>
+      </button>
+    </div>
+    <div class="example-button-container">
+      <button
+        mat-stroked-button
+        class="navbutton p-4"
+        routerLink="/user/matches"
+        routerLinkActive="active"
+      >
+        <mat-icon>sports_handball</mat-icon>
+        <span>Matches</span>
+      </button>
+    </div>
+  </mat-toolbar>
+
+  }
+</nav>

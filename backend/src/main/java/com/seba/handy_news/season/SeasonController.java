@@ -1,13 +1,15 @@
 package com.seba.handy_news.season;
 
-import com.seba.handy_news.match.Match;
-import com.seba.handy_news.season.SeasonClub.SeasonClub;
+import com.seba.handy_news.club.Club;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api/season")
@@ -15,39 +17,37 @@ import java.util.List;
 public class SeasonController {
     private final SeasonService seasonService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Season> getSeasonById(@PathVariable Long id) {
-        return ResponseEntity.ok(seasonService.getSeasonById(id));
-    }
-
     @GetMapping
     public ResponseEntity<List<Season>> getAllSeasons() {
-        return ResponseEntity.ok(seasonService.getAll());
+        return ResponseEntity.ok(seasonService.getAllSeasons());
+    }
+
+    @GetMapping("/{seasonId}")
+    public ResponseEntity<Season> getSeasonById(@PathVariable Long seasonId) {
+        Season season = seasonService.getSeasonById(seasonId);
+        return ResponseEntity.ok(season);
     }
 
     @GetMapping("/league/{leagueId}")
-    public ResponseEntity<List<Season>> getAllFromLeague(@PathVariable Long leagueId) {
-        return ResponseEntity.ok(seasonService.getAllSeasonsFromLeague(leagueId));
+    public ResponseEntity<List<Season>> getAllSeasonsByLeague(@PathVariable Long leagueId) {
+        return ResponseEntity.ok(seasonService.getAllSeasonsByLeague(leagueId));
     }
 
-    @GetMapping("/{seasonId}/matches")
-    public ResponseEntity<List<Match>> getAllMatchesFromSeason(@PathVariable Long seasonId) {
-        return ResponseEntity.ok(seasonService.getAllMatchesFromSeason(seasonId));
+    @GetMapping("/{seasonId}/clubs")
+    public ResponseEntity<Set<Club>> getClubsBySeason(@PathVariable Long seasonId) {
+        return ResponseEntity.ok(seasonService.getClubsBySeason(seasonId));
     }
 
-    @GetMapping("/{seasonId}/seasonClubs")
-    public ResponseEntity<List<SeasonClub>> getAllSeasonClubsFromSeason(@PathVariable Long seasonId) {
-        return ResponseEntity.ok(seasonService.getAllSeasonClubsFromSeason(seasonId));
-    }
-
-    @PostMapping("/league/{leagueId}")
+    @PostMapping("/{leagueId}")
     public ResponseEntity<Season> createSeason(@PathVariable Long leagueId, @RequestBody Season season) {
-        return new ResponseEntity<>(seasonService.createSeason(season, leagueId), HttpStatus.CREATED);
+        Season createdSeason = seasonService.createSeason(leagueId, season);
+        return ResponseEntity.ok(createdSeason);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Season> updateSeason(@PathVariable Long id, @RequestBody Season updatedSeason) {
-        return ResponseEntity.ok(seasonService.updateSeason(id, updatedSeason));
+        Season season = seasonService.updateSeason(id, updatedSeason);
+        return ResponseEntity.ok(season);
     }
 
     @DeleteMapping("/{id}")
@@ -56,28 +56,20 @@ public class SeasonController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{seasonId}/match")
-    public ResponseEntity<Void> addMatchToSeason(@PathVariable Long seasonId, @RequestBody Match match) {
-        seasonService.addMatchToSeason(seasonId, match);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/year")
+    public ResponseEntity<List<Season>> searchSeasons(@RequestParam int year) {
+        return ResponseEntity.ok(seasonService.findSeasonByYear(year));
     }
 
-    @DeleteMapping("/{seasonId}/match/{matchId}")
-    public ResponseEntity<Void> removeMatchFromSeason(@PathVariable Long seasonId, @PathVariable Long matchId) {
-        seasonService.removeMatchFromSeason(seasonId, matchId);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/search")
+    public ResponseEntity<Page<Season>> searchSeasons(@RequestParam(required = false) String name,
+                                                      @RequestParam(required = false) Integer year,
+                                                      @RequestParam(required = false) Long leagueId,
+                                                      @RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "10") int size,
+                                                      @RequestParam(defaultValue = "name") String sortBy) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(sortBy));
+        Page<Season> seasons = seasonService.searchSeasons(name, year, leagueId, pageRequest);
+        return ResponseEntity.ok(seasons);
     }
-
-    @PostMapping("/{seasonId}/seasonClub")
-    public ResponseEntity<Void> addSeasonClubToSeason(@PathVariable Long seasonId, @RequestBody SeasonClub seasonClub) {
-        seasonService.addSeasonClubToSeason(seasonId, seasonClub);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/{seasonId}/seasonClub/{seasonClubId}")
-    public ResponseEntity<Void> removeSeasonClubFromSeason(@PathVariable Long seasonId, @PathVariable Long seasonClubId) {
-        seasonService.removeSeasonClubFromSeason(seasonId, seasonClubId);
-        return ResponseEntity.noContent().build();
-    }
-
 }

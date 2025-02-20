@@ -15,7 +15,29 @@ services:
       - handy-news
     restart: unless-stopped
 
+  backend:
+    container_name: handy_news_backend
+    build: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/handy_news
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+    depends_on:
+      - postgres
+    networks:
+      - handy-news
 
+  frontend:
+    container_name: handy_news_frontend
+    build: ./frontend
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+    networks:
+      - handy-news
 
 networks:
   handy-news:

@@ -34,10 +34,15 @@ public class User implements UserDetails, Principal {
     @Column(unique = true)
     private String email;
     private String password;
-
+    private LocalDate dateOfBirth;
+    private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
 
 
     @Override
@@ -47,7 +52,7 @@ public class User implements UserDetails, Principal {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override

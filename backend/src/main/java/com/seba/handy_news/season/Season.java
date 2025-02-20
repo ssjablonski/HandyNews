@@ -1,16 +1,20 @@
 package com.seba.handy_news.season;
 
+import com.fasterxml.jackson.annotation.*;
+import com.seba.handy_news.club.Club;
 import com.seba.handy_news.league.League;
+import com.seba.handy_news.league.LeagueDto;
 import com.seba.handy_news.match.Match;
-import com.seba.handy_news.season.SeasonClub.SeasonClub;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -18,23 +22,35 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "season")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Season {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private int year;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "league_id", nullable = false)
+    @JsonBackReference
     private League league;
 
-    @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
-    private List<SeasonClub> seasonClubs;
+    @Transient
+    @JsonProperty
+    public LeagueDto getLeagueDto() {
+        return new LeagueDto(league.getId(), league.getName());
+    }
 
-    @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
-    private List<Match> matches;
+    @OneToMany(mappedBy = "season", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Match> matches = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "season_club",
+            joinColumns = @JoinColumn(name = "season_id"),
+            inverseJoinColumns = @JoinColumn(name = "club_id")
+    )
+    private Set<Club> clubs = new HashSet<>();
 }

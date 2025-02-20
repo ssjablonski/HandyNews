@@ -1,0 +1,70 @@
+<div class="container my-4">
+  <div class="header mb-3">
+    <h2>Leagues</h2>
+    <button mat-raised-button color="primary" (click)="createLeague()">
+      <mat-icon>add</mat-icon> Add New League
+    </button>
+  </div>
+
+  <mat-card>
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="logo">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let league">
+            <img [src]="league.logoUrl" alt="logo" width="35" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="">Name</th>
+          <td mat-cell *matCellDef="let league">{{ league.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="country">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="">Country</th>
+          <td mat-cell *matCellDef="let league">{{ league.country }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let league">
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="updateLeague(league.id)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="deleteLeague(league.id)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <tr *matNoDataRow>
+          <td class="text-center p-4" colspan="6">
+            <h2>No leagues found</h2>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="d-flex justify-content-between">
+      <mat-paginator
+        [length]="totalCount"
+        [pageSizeOptions]="pageSizeOptions"
+        [pageSize]="5"
+        showFirstLastButtons
+        aria-label="Select page"
+      >
+      </mat-paginator>
+    </div>
+  </mat-card>
+</div>

@@ -1,0 +1,66 @@
+<div class="container my-4">
+  <div class="header mb-3">
+    <h2>Clubs</h2>
+    <button mat-raised-button color="primary" (click)="createClub()">
+      <mat-icon>add</mat-icon> Add New Club
+    </button>
+  </div>
+
+  <mat-card>
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="logo">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let club">
+            <img [src]="club.logoUrl" alt="logo" width="35" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="">Name</th>
+          <td mat-cell *matCellDef="let club">{{ club.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="city">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="">Country</th>
+          <td mat-cell *matCellDef="let club">{{ club.city }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let club">
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="updateClub(club.id)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteClub(club.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <tr *matNoDataRow>
+          <td class="text-center p-4" colspan="6">
+            <h2>No clubs found</h2>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="d-flex justify-content-between">
+      <mat-paginator
+        [length]="totalCount"
+        [pageSizeOptions]="pageSizeOptions"
+        [pageSize]="5"
+        showFirstLastButtons
+        aria-label="Select page"
+      >
+      </mat-paginator>
+    </div>
+  </mat-card>
+</div>

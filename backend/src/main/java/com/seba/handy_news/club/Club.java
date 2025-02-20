@@ -1,13 +1,17 @@
 package com.seba.handy_news.club;
 
-import com.seba.handy_news.season.SeasonClub.SeasonClub;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.seba.handy_news.league.League;
+import com.seba.handy_news.season.Season;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,10 +26,13 @@ public class Club {
     private Long id;
 
     private String name;
-    private String city;
-    private String country;
 
-    @OneToMany(mappedBy = "club")
-    private List<SeasonClub> seasonClubs;
+    private String city;
+
+    private String logoUrl;
+
+    @ManyToMany(mappedBy = "clubs")
+    @JsonBackReference
+    private Set<Season> seasons = new HashSet<>();
 
 }

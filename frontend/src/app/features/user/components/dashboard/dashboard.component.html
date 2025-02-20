@@ -1,0 +1,75 @@
+<div class="container">
+  @if (userInfo) {
+  <mat-card class="user-card">
+    <mat-card-header>
+      <mat-card-title>
+        Hi,
+        <span class="user-name"
+          >{{ userInfo.firstName }} {{ userInfo.lastName }}!</span
+        >
+      </mat-card-title>
+      <mat-card-subtitle> <h3>Your account info:</h3></mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-list>
+        <mat-list-item>
+          <mat-icon matListItemIcon>email</mat-icon>
+          <div matListItemTitle>Email</div>
+          <div matListItemLine>{{ userInfo.email }}</div>
+        </mat-list-item>
+
+        <mat-divider></mat-divider>
+
+        <mat-list-item>
+          <mat-icon matListItemIcon>badge</mat-icon>
+          <div matListItemTitle>User ID</div>
+          <div matListItemLine>#{{ userInfo.id }}</div>
+        </mat-list-item>
+
+        <mat-divider></mat-divider>
+
+        <mat-list-item>
+          <mat-icon matListItemIcon>cake</mat-icon>
+          <div matListItemTitle>Date of Birth</div>
+          <div matListItemLine>{{ userInfo.dateOfBirth }}</div>
+        </mat-list-item>
+
+        <mat-divider></mat-divider>
+
+        <mat-list-item>
+          <mat-icon matListItemIcon>phone</mat-icon>
+          <div matListItemTitle>Phone Number</div>
+          <div matListItemLine>{{ userInfo.phoneNumber }}</div>
+        </mat-list-item>
+
+        <mat-divider></mat-divider>
+
+        <mat-list-item>
+          <mat-icon matListItemIcon>security</mat-icon>
+          <div matListItemTitle>Role</div>
+          <div matListItemLine>{{ userInfo.role }}</div>
+        </mat-list-item>
+
+        <mat-divider></mat-divider>
+
+        <mat-list-item>
+          <mat-icon matListItemIcon>home</mat-icon>
+          <div matListItemTitle>Address</div>
+          <div matListItemLine>
+            {{ userInfo.address.street }}, {{ userInfo.address.houseNumber }},
+            {{ userInfo.address.city }}, {{ userInfo.address.zipcode }}
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-button color="warn" (click)="openDeleteDialog()">
+        <mat-icon>delete</mat-icon>
+        Delete account
+      </button>
+    </mat-card-actions>
+  </mat-card>
+  }
+</div>

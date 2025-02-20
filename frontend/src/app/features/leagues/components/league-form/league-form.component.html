@@ -1,0 +1,50 @@
+<div class="container my-4">
+  <mat-card>
+    <mat-card-header class="mb-3">
+      <mat-card-title>{{
+        isEditMode ? "Edit League" : "Create New League"
+      }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="leagueForm" (ngSubmit)="onSubmit()">
+        <div>
+          <mat-form-field class="w-100">
+            <mat-label>Name</mat-label>
+            <input matInput type="text" formControlName="name" />
+            @if (leagueForm.get("name")?.hasError("required")) {
+            <mat-error>Name is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="w-100">
+            <mat-label>Country</mat-label>
+            <input matInput type="text" formControlName="country" />
+            @if (leagueForm.get("country")?.hasError("required")) {
+            <mat-error>Country is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="w-100">
+            <mat-label>Logo URL</mat-label>
+            <input matInput type="url" formControlName="logoUrl" />
+            @if (leagueForm.get("logoUrl")?.hasError("required")) {
+            <mat-error>Logo URL is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="d-grid gap-2">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="leagueForm.invalid"
+          >
+            {{ isEditMode ? "Edit League" : "Create League" }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

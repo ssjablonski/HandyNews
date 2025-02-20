@@ -1,7 +1,9 @@
 package com.seba.handy_news.league;
 
-import com.seba.handy_news.season.Season;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,21 +43,14 @@ public class LeagueController {
         return ResponseEntity.noContent().build();
     }
 
-//    TODO - nie wiem wlasnie co z tym
-//    @PostMapping("/{leagueId}/season")
-//    public ResponseEntity<Void> addSeasonToLeague(@PathVariable Long leagueId, @RequestBody Season season) {
-//        leagueService.addSeasonToLeague(leagueId, season);
-//        return ResponseEntity.noContent().build();
-//    }
-//
-//    @DeleteMapping("/{leagueId}/seasons/{seasonId}")
-//    public ResponseEntity<Void> removeSeasonFromLeague(@PathVariable Long leagueId, @PathVariable Long seasonId) {
-//        leagueService.removeSeasonFromLeague(leagueId, seasonId);
-//        return ResponseEntity.noContent().build();
-//    }
-
-    @GetMapping("/{leagueId}/seasons")
-    public ResponseEntity<List<Season>> getAllSeasonsFromLeague(@PathVariable Long leagueId) {
-        return ResponseEntity.ok(leagueService.getAllSeasonsFromLeague(leagueId));
+    @GetMapping("/search")
+    public ResponseEntity<Page<League>> searchLeagues(@RequestParam(required = false) String name,
+                                                      @RequestParam(required = false) String country,
+                                                      @RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "10") int size,
+                                                      @RequestParam(defaultValue = "name") String sortBy) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(sortBy));
+        Page<League> leagues = leagueService.searchLeagues(name, country, pageRequest);
+        return ResponseEntity.ok(leagues);
     }
 }

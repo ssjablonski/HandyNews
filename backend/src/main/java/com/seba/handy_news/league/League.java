@@ -1,6 +1,9 @@
 package com.seba.handy_news.league;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.seba.handy_news.season.Season;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -16,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "league")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class League {
 
     @Id
@@ -24,9 +29,9 @@ public class League {
 
     private String name;
     private String country;
+    private String logoUrl;
 
-    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Season> seasons;
-
+    private List<Season> seasons = new ArrayList<>();
 }
